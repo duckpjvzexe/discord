@@ -3,519 +3,143 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Game Profile — Neon UI</title>
-
-  <!-- Google font (optional) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
+  <title>Profile — Neon Bio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg-1: #0b0f1a;
-      --bg-2: #071026;
-      --card: rgba(255,255,255,0.04);
-      --muted: rgba(255,255,255,0.65);
-      --neon-a: #7b61ff;
-      --neon-b: #00f0ff;
-      --accent: #ff6b89;
-      --glass-blur: 10px;
-      --radius: 16px;
-      --shadow: 0 6px 30px rgba(2,6,23,0.65);
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    :root {
+      --bg: #0b0f1a;
+      --card: rgba(255,255,255,0.05);
+      --neon1: #7b61ff;
+      --neon2: #00f0ff;
+      --text: #f0f4ff;
+      --muted: rgba(255,255,255,0.6);
+      --radius: 20px;
+      font-family: "Poppins", sans-serif;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background: radial-gradient(1200px 600px at 10% 20%, rgba(123,97,255,0.08), transparent),
-                  radial-gradient(1000px 500px at 90% 80%, rgba(0,240,255,0.06), transparent),
-                  linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      color:#e9eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:36px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:24px;
-      min-height:100vh;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at 20% 30%, rgba(123,97,255,0.08), transparent 60%), 
+                  radial-gradient(circle at 80% 70%, rgba(0,240,255,0.08), transparent 60%), 
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
     }
 
-    /* Wrapping container */
-    .wrap{
-      width:min(1100px, 96vw);
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:28px;
-      align-items:start;
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
     }
 
-    /* Left panel: profile card */
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:var(--radius);
-      padding:20px;
-      backdrop-filter: blur(var(--glass-blur));
-      box-shadow:var(--shadow);
-      border: 1px solid rgba(255,255,255,0.04);
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      border: 3px solid transparent;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, var(--neon1), var(--neon2)) border-box;
     }
 
-    .profile-top{
-      display:flex;
-      gap:16px;
-      align-items:center;
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
 
-    .avatar{
-      width:96px;
-      height:96px;
-      border-radius:18px;
-      overflow:hidden;
-      border: 2px solid rgba(255,255,255,0.06);
-      position:relative;
-      flex:0 0 96px;
-      background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    }
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-
-    .glow-ring{
-      position:absolute;
-      inset: -8px;
-      pointer-events:none;
-      border-radius:22px;
-      background: conic-gradient(from 0deg, rgba(123,97,255,0.18), rgba(0,240,255,0.18));
-      filter: blur(12px);
-      opacity:0.9;
-      mix-blend-mode:screen;
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 6px;
     }
 
-    .name{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:0;
-    }
-    .name h1{
-      margin:0;
-      font-size:20px;
-      font-weight:700;
-      letter-spacing: -0.4px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .tag{
-      font-size:13px;
-      color:var(--muted);
-      display:flex;
-      gap:8px;
-      align-items:center;
+    h2 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 18px;
     }
 
-    .buttons{
-      margin-top:12px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:8px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-      font-size:13px;
-      color:inherit;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      transition:transform .15s ease, box-shadow .15s ease;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn.neon{
-      box-shadow: 0 6px 24px rgba(123,97,255,0.12), 0 0 16px rgba(0,240,255,0.06);
-      border: 1px solid rgba(123,97,255,0.18);
+    p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
 
-    .level-badge{
-      margin-top:14px;
-      padding:10px;
-      border-radius:12px;
-      background: linear-gradient(90deg, rgba(123,97,255,0.06), rgba(0,240,255,0.03));
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      font-weight:700;
-    }
-    .level-num{
-      font-size:20px;
-      background: linear-gradient(90deg,var(--neon-a),var(--neon-b));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    /* XP progress */
-    .progress-wrap{
-      margin-top:12px;
-    }
-    .progress{
-      height:12px;
-      background: rgba(255,255,255,0.03);
-      border-radius:999px;
-      overflow:hidden;
-      position:relative;
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .progress > i{
-      display:block;
-      height:100%;
-      width:0%;
-      background: linear-gradient(90deg,var(--neon-a),var(--neon-b));
-      transition: width 900ms cubic-bezier(.2,.9,.2,1);
-      box-shadow: 0 6px 20px rgba(123,97,255,0.16);
-    }
-    .progress-meta{
-      display:flex;
-      justify-content:space-between;
-      font-size:12px;
-      color:var(--muted);
-      margin-top:8px;
+    .link {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border-radius: 12px;
+      padding: 12px;
+      transition: all 0.2s ease;
     }
 
-    /* Stats */
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:14px;
-    }
-    .stat{
-      background: rgba(255,255,255,0.02);
-      padding:10px;
-      border-radius:10px;
-      font-weight:700;
-      text-align:center;
-      font-size:13px;
-    }
-    .stat small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:6px}
-
-    /* Right panel */
-    .main{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
+    .link:hover {
+      background: linear-gradient(90deg, var(--neon1), var(--neon2));
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0,240,255,0.3);
     }
 
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:var(--radius);
-      padding:18px;
-      border:1px solid rgba(255,255,255,0.04);
-      box-shadow: var(--shadow);
+    footer {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: var(--muted);
     }
 
-    .bio{
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.5;
+    /* Neon glow on name */
+    .neon {
+      background: linear-gradient(90deg, var(--neon1), var(--neon2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-
-    .achievements{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .badge{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:10px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.03);
-      font-weight:700;
-      font-size:13px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
-    .feed{
-      display:grid;
-      grid-template-columns: repeat(2,1fr);
-      gap:12px;
-      margin-top:12px;
-    }
-    .post{
-      padding:12px;
-      border-radius:12px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.14), rgba(255,255,255,0.02));
-      border:1px solid rgba(255,255,255,0.02);
-      font-size:13px;
-    }
-    .post h4{margin:0 0 6px 0;font-size:14px}
-    .post p{margin:0;color:var(--muted);font-size:13px}
-
-    /* Footer / social */
-    .socials{
-      display:flex;
-      gap:12px;
-      margin-top:14px;
-    }
-    .pill{
-      padding:8px 12px;
-      border-radius:999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03);
-      font-weight:600;
-      font-size:13px;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
-
-    /* small screens */
-    @media (max-width:920px){
-      .wrap{grid-template-columns:1fr; padding-bottom:40px}
-      .profile-top{align-items:center}
-      .feed{grid-template-columns:1fr}
-    }
-
-    /* subtle float animation */
-    @keyframes floaty {
-      0%{transform:translateY(0)}
-      50%{transform:translateY(-6px)}
-      100%{transform:translateY(0)}
-    }
-    .avatar{animation: floaty 6s ease-in-out infinite}
-
-    /* neon text highlight */
-    .neon-text{
-      background: linear-gradient(90deg,var(--neon-a),var(--neon-b));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    /* small utility */
-    .muted{color:var(--muted)}
-    .tiny{font-size:12px}
   </style>
 </head>
 <body>
-  <div class="wrap" role="main" aria-label="User game profile">
-    <!-- LEFT: PROFILE -->
-    <aside class="card" aria-labelledby="profile-name">
-      <div class="profile-top" role="region" aria-label="Profile header">
-        <div class="avatar" id="avatar">
-          <div class="glow-ring" aria-hidden="true"></div>
-          <!-- Replace the src with user's avatar -->
-          <img src="https://images.unsplash.com/photo-1603415526960-f8f6c3b4f6c6?q=80&w=800&auto=format&fit=crop&sat=-20" alt="Avatar người dùng" />
-        </div>
+  <div class="card">
+    <div class="avatar">
+      <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400" alt="Avatar cá nhân">
+    </div>
+    <h1><span class="neon">Nguyễn Minh</span></h1>
+    <h2>UI/UX Designer • Freelancer</h2>
+    <p>
+      Mình là nhà thiết kế tự do yêu thích phong cách tối giản và công nghệ hiện đại.  
+      Luôn tìm cách kết hợp sáng tạo và trải nghiệm người dùng tốt nhất.
+    </p>
 
-        <div class="name">
-          <h1 id="profile-name">Aether <span class="tiny muted">#042</span></h1>
-          <div class="tag">
-            <span class="neon-text">Diamond • Night Order</span>
-            <span class="muted">•</span>
-            <span class="muted tiny">Last seen: 2h</span>
-          </div>
+    <div class="links">
+      <a href="#" class="link">🌐 Website</a>
+      <a href="#" class="link">💼 LinkedIn</a>
+      <a href="#" class="link">📸 Instagram</a>
+      <a href="#" class="link">✉️ Liên hệ</a>
+    </div>
 
-          <div class="buttons" aria-hidden="false">
-            <button class="btn neon" id="msgBtn" title="Gửi tin nhắn">✉️ Send</button>
-            <button class="btn" id="friendBtn" title="Thêm bạn bè">➕ Add</button>
-            <button class="btn" id="copyBtn" title="Sao chép tên">📋 Copy</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="level-badge" aria-hidden="false">
-        <div>
-          Rank <div class="muted tiny">Season 17</div>
-        </div>
-        <div style="text-align:right">
-          <div class="level-num" id="level">Lv. 42</div>
-          <div class="muted tiny">Power: 9,450</div>
-        </div>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="muted tiny" style="display:flex;justify-content:space-between">
-          <span>XP</span>
-          <span id="xpText">7,800 / 10,000</span>
-        </div>
-        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78" aria-label="XP progress">
-          <i id="xpBar" style="width:78%"></i>
-        </div>
-      </div>
-
-      <div class="stats" aria-hidden="false">
-        <div class="stat">
-          89 <small>Attack</small>
-        </div>
-        <div class="stat">
-          73 <small>Defense</small>
-        </div>
-        <div class="stat">
-          94 <small>Crit</small>
-        </div>
-      </div>
-
-      <div style="margin-top:14px; display:flex; gap:10px; align-items:center; justify-content:space-between">
-        <div class="muted tiny">Member since <strong>2019</strong></div>
-        <div class="tiny muted">ID: <strong>0xA3F2</strong></div>
-      </div>
-    </aside>
-
-    <!-- RIGHT: MAIN CONTENT -->
-    <section class="main">
-      <div class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:center">
-          <h2 style="margin:0">About</h2>
-          <div class="muted tiny">Preferences: <strong>Dark • Neon</strong></div>
-        </div>
-        <p class="bio" style="margin-top:10px">
-          Aether — Guardian of the Rift. Streamer • Tactician • Speedrunner.
-          Thích thử thách solo và team raid, chuyên build tank-damage hybrid.
-          Luôn săn đồ hiếm và đua top bảng xếp hạng.
-        </p>
-
-        <div class="achievements" aria-label="Achievements">
-          <div class="badge">🏆 Top 100 — Arena</div>
-          <div class="badge">⚔️ Raid Conqueror</div>
-          <div class="badge">💎 Diamond Season</div>
-          <div class="badge">🔥 Speedrun 02:17</div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:center">
-          <h3 style="margin:0">Activity</h3>
-          <div class="muted tiny">Recent</div>
-        </div>
-
-        <div class="feed" aria-live="polite">
-          <article class="post">
-            <h4>New Legendary Drop!</h4>
-            <p class="muted">Chiến thắng boss "Void Titan" — nhận được <strong>Blade of Dawn</strong>.</p>
-          </article>
-
-          <article class="post">
-            <h4>Streamed Raid</h4>
-            <p class="muted">Livestreamed a 3-hour raid. Viewers: 12,420 • Clips made: 18.</p>
-          </article>
-
-          <article class="post">
-            <h4>Speedrun PB</h4>
-            <p class="muted">Mới: Personal Best — 2:17 (Any%)</p>
-          </article>
-
-          <article class="post">
-            <h4>Guild Invite</h4>
-            <p class="muted">Đã được mời vào "Night Order" — accepted.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="panel" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px">
-        <div>
-          <div style="font-weight:800">Social</div>
-          <div class="socials" aria-label="Social links">
-            <a class="pill" href="#" onclick="return false">Twitch</a>
-            <a class="pill" href="#" onclick="return false">Discord</a>
-            <a class="pill" href="#" onclick="return false">YouTube</a>
-            <a class="pill" href="#" onclick="return false">Twitter</a>
-          </div>
-        </div>
-
-        <div style="min-width:240px">
-          <div style="font-weight:700">Matchmaking</div>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="btn neon" id="queueBtn">🔎 Queue</button>
-            <button class="btn" id="inviteBtn">📩 Invite</button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <footer>© 2025 Nguyễn Minh</footer>
   </div>
-
-  <script>
-    // --- Simple interactive behaviors ---
-    const xpBar = document.getElementById('xpBar');
-    const xpText = document.getElementById('xpText');
-    const levelEl = document.getElementById('level');
-    const copyBtn = document.getElementById('copyBtn');
-
-    // Demo data (you can replace with dynamic values)
-    const userData = {
-      name: 'Aether #042',
-      level: 42,
-      xp: 7800,
-      xpMax: 10000,
-      power: 9450
-    };
-
-    // Animate XP bar on load
-    window.addEventListener('load', ()=> {
-      const percent = Math.round((userData.xp / userData.xpMax) * 100);
-      // small timeout to allow CSS to paint
-      setTimeout(()=> xpBar.style.width = percent + '%', 80);
-      xpText.textContent = `${userData.xp.toLocaleString()} / ${userData.xpMax.toLocaleString()}`;
-      levelEl.textContent = 'Lv. ' + userData.level;
-      // set aria now
-      const progress = document.querySelector('.progress');
-      if(progress) progress.setAttribute('aria-valuenow', percent);
-    });
-
-    // Copy profile name
-    copyBtn.addEventListener('click', async ()=> {
-      const s = userData.name;
-      try{
-        await navigator.clipboard.writeText(s);
-        copyBtn.textContent = '✅ Copied';
-        setTimeout(()=> copyBtn.textContent = '📋 Copy', 1200);
-      }catch(e){
-        copyBtn.textContent = '❌ Failed';
-        setTimeout(()=> copyBtn.textContent = '📋 Copy', 1200);
-      }
-    });
-
-    // Simulate queue button
-    document.getElementById('queueBtn').addEventListener('click', (e)=>{
-      const b = e.currentTarget;
-      b.textContent = '⏳ Searching...';
-      b.disabled = true;
-      setTimeout(()=> { b.textContent = '🔎 Queue'; b.disabled=false }, 1800);
-    });
-
-    // Lightweight keyboard accessibility: press "L" to gain +500 XP demo
-    window.addEventListener('keydown', (ev)=>{
-      if(ev.key.toLowerCase() === 'l'){
-        // level up simulation
-        userData.xp += 500;
-        if(userData.xp >= userData.xpMax){
-          userData.level += 1;
-          userData.xp = userData.xp - userData.xpMax;
-          userData.xpMax = Math.round(userData.xpMax * 1.12);
-          // small level flash
-          levelEl.style.transition = 'transform .25s ease, filter .25s';
-          levelEl.style.transform = 'scale(1.12)';
-          levelEl.style.filter = 'drop-shadow(0 8px 20px rgba(123,97,255,0.35))';
-          setTimeout(()=> { levelEl.style.transform=''; levelEl.style.filter=''; }, 450);
-        }
-        const percent = Math.round((userData.xp / userData.xpMax) * 100);
-        xpBar.style.width = Math.min(100, percent) + '%';
-        xpText.textContent = `${userData.xp.toLocaleString()} / ${userData.xpMax.toLocaleString()}`;
-      }
-    });
-
-    // Accessibility: focus outlines for keyboard users
-    document.body.addEventListener('keydown', (e)=>{
-      if(e.key === 'Tab') document.documentElement.style.setProperty('--focusOutline','2px dashed rgba(255,255,255,0.12)');
-    }, {once:true});
-
-    // If you want to plug dynamic data: fetch and update DOM elements accordingly.
-  </script>
 </body>
 </html>
