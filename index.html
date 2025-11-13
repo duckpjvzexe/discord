@@ -99,11 +99,19 @@
     font-size: 1.6rem;
     font-weight: 700;
     background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     margin-bottom: 20px;
     transform: translateZ(30px);
+    animation: gradientMove 5s linear infinite;
+  }
+  
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 
     /* --- Social Icons --- */
