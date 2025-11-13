@@ -35,19 +35,19 @@
     }
 
     .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 40px 30px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 0 25px rgba(0,0,0,0.5);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform-style: preserve-3d;
-    position: relative;
-    overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius);
+      padding: 40px 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
   }
   
   .card::before {
@@ -55,11 +55,11 @@
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 60%);
+    background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.15), transparent 60%);
     pointer-events: none;
-    transition: background 0.1s ease;
+    transition: background 0.2s ease-out;
   }
-
+    
     /* --- Avatar --- */
     .avatar-wrapper {
       position: relative;
@@ -241,7 +241,6 @@
 
   <script>
   const card = document.getElementById('profileCard');
-  const cardLight = card.querySelector('::before'); // pseudo-element sẽ cập nhật qua JS bằng style.background
   
   card.addEventListener('mousemove', e => {
     const r = card.getBoundingClientRect();
@@ -252,7 +251,6 @@
     const rotateY = (x - r.width / 2) / 6;
   
     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-    card.style.transition = 'transform 0.05s ease-out';
     card.style.boxShadow = `0 0 50px rgba(123,97,255,0.4)`;
   
     const percentX = (x / r.width) * 100;
@@ -260,8 +258,8 @@
     card.style.setProperty('--light-x', `${percentX}%`);
     card.style.setProperty('--light-y', `${percentY}%`);
   });
+  
   card.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease';
     card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
     card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
     card.style.setProperty('--light-x', `50%`);
