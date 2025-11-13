@@ -13,7 +13,7 @@
       --card: rgba(255,255,255,0.05);
       --neon1: #7b61ff;
       --neon2: #00f0ff;
-      --text: #f2f6ff;
+      --text: #f3f6ff;
       --muted: rgba(255,255,255,0.6);
       --radius: 20px;
       font-family: "Poppins", sans-serif;
@@ -22,8 +22,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: radial-gradient(circle at 25% 25%, rgba(123,97,255,0.08), transparent 60%), 
-                  radial-gradient(circle at 80% 80%, rgba(0,240,255,0.08), transparent 60%), 
+      background: radial-gradient(circle at 25% 25%, rgba(123,97,255,0.1), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(0,240,255,0.1), transparent 60%), 
                   var(--bg);
       min-height: 100vh;
       display: flex;
@@ -55,6 +55,7 @@
                   linear-gradient(135deg, var(--neon1), var(--neon2)) border-box;
       overflow: hidden;
     }
+
     .avatar img {
       width: 100%;
       height: 100%;
@@ -62,39 +63,57 @@
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       background: linear-gradient(90deg, var(--neon1), var(--neon2));
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
-    .socials {
+    /* --- Social Icons --- */
+    .social-icons {
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 16px;
       margin-bottom: 25px;
     }
 
-    .socials a {
-      text-decoration: none;
-      font-size: 1.3rem;
-      color: var(--text);
+    .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 10px 16px;
-      transition: all 0.2s ease;
+      color: var(--text);
+      transition: all 0.25s ease;
     }
 
-    .socials a:hover {
-      background: linear-gradient(90deg, var(--neon1), var(--neon2));
+    .social-icon:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 18px rgba(0,240,255,0.3);
+    }
+
+    .social-icon.youtube:hover {
+      background: #ff2e2e;
       color: #fff;
-      transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(0,240,255,0.4);
     }
 
+    .social-icon.discord:hover {
+      background: #5865F2;
+      color: #fff;
+    }
+
+    .social-icon.roblox:hover {
+      background: #D82E34;
+      color: #fff;
+    }
+
+    /* --- Links --- */
     .links {
       display: flex;
       flex-direction: column;
@@ -130,24 +149,39 @@
 <body>
   <div class="card">
     <div class="avatar">
-      <img src="https://images.unsplash.com/photo-1603415526960-f8f6c3b4f6c6?q=80&w=400" alt="Avatar">
+      <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400" alt="Avatar">
     </div>
-    <h1>Nguyễn Minh</h1>
+    <h1>Khoa</h1>
 
-    <div class="socials">
-      <a href="#" title="YouTube">📺</a>
-      <a href="#" title="Discord">💬</a>
-      <a href="#" title="Roblox">🎮</a>
+    <div class="social-icons">
+      <!-- YOUTUBE -->
+      <a href="https://www.youtube.com/@example" class="social-icon youtube" title="YouTube" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.499 6.203a2.974 2.974 0 0 0-2.092-2.104C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.407.599A2.974 2.974 0 0 0 .501 6.203C0 8.116 0 12.001 0 12.001s0 3.884.501 5.798a2.974 2.974 0 0 0 2.092 2.104C4.495 20.5 12 20.5 12 20.5s7.505 0 9.407-.599a2.974 2.974 0 0 0 2.092-2.104C24 15.885 24 12.001 24 12.001s0-3.885-.501-5.798zM9.546 15.569V8.432L15.818 12l-6.272 3.569z"/>
+        </svg>
+      </a>
+
+      <!-- ROBLOX -->
+      <a href="https://www.roblox.com/vi/users/xxxxxxxx/profile" class="social-icon roblox" title="Roblox" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor">
+          <path d="M117.3 0L0 394.7 394.7 512 512 117.3 117.3 0zm181.3 330.7l-117.3-32 32-117.3 117.3 32-32 117.3z"></path>
+        </svg>
+      </a>
+
+      <!-- DISCORD -->
+      <a href="https://discord.com/users/xxxxxxxxx" class="social-icon discord" title="Discord" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+      </a>
     </div>
 
+    <!-- Link List -->
     <div class="links">
       <a href="#" class="link">🌐 Website chính</a>
-      <a href="#" class="link">💻 Portfolio</a>
-      <a href="#" class="link">📷 Instagram</a>
-      <a href="#" class="link">📩 Liên hệ</a>
     </div>
 
-    <footer>© 2025 Nguyễn Minh</footer>
+    <footer>© 2025 Khoa</footer>
   </div>
 </body>
 </html>
