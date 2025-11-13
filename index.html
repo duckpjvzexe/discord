@@ -40,7 +40,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* overlay to improve contrast on mobile devices */
     body::after {
       content: "";
       position: fixed;
@@ -79,8 +78,6 @@
       transition: background 0.18s ease-out;
       border-radius: inherit;
     }
-
-    /* reduce expensive visuals on low-power or small screens via media queries below */
 
     /* --- Avatar --- */
     .avatar-wrapper {
@@ -229,7 +226,7 @@
     @media (max-width: 600px) {
       body {
         padding: 20px 12px;
-        background-attachment: scroll; /* avoid fixed background on mobile for performance */
+        background-attachment: scroll;
       }
       .card {
         padding: 20px 16px;
@@ -237,7 +234,7 @@
         max-width: 520px;
         width: calc(100% - 12px);
         box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-        backdrop-filter: blur(8px); /* reduce blur on mobile */
+        backdrop-filter: blur(8px);
       }
       .card::before {
         background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.08), transparent 50%);
@@ -251,14 +248,12 @@
       footer { font-size: 0.78rem; margin-top: 18px; }
     }
 
-    /* Remove 3D tilt and heavy transforms for touch-only devices */
     @media (hover: none) {
       .card { transform: none !important; transition: none; }
       .card::before { transition: none; }
       .social-icon:hover, .link:hover { transform: none; box-shadow: none; }
     }
 
-    /* small screens */
     @media (max-width: 380px) {
       .card { padding: 16px 12px; border-radius: 12px; }
       .avatar { width: 84px; height: 84px; }
@@ -282,7 +277,7 @@
 
     <h1>DuckXKurumi</h1>
 
-    <div class="social-icons" role="navigation" aria-label="Liên kết mạng xã hội">
+    <div class="social-icons" role="navigation" aria-label="Social Network Links">
       <!-- YouTube -->
       <a href="https://www.youtube.com/@vzduckrblx" class="social-icon youtube" title="YouTube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -315,11 +310,9 @@
     (function () {
       const card = document.getElementById('profileCard');
 
-      // Respect reduced motion and hover capability
       const supportsHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Only attach the 3D/tilt effect on devices that support hover & fine pointer (desktop)
       if (supportsHover && !prefersReducedMotion) {
         const handleMove = e => {
           const r = card.getBoundingClientRect();
@@ -330,8 +323,8 @@
           const dy = y - r.height / 2;
 
           // soften effect for better UX
-          const rotateX = (dy / r.height) * 12; // reduced from 60
-          const rotateY = -(dx / r.width) * 12;
+          const rotateX = (dy / r.height) * 55;
+          const rotateY = -(dx / r.width) * 55;
 
           card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
           card.style.boxShadow = `0 16px 40px rgba(123,97,255,0.18)`;
@@ -352,14 +345,12 @@
         card.addEventListener('mousemove', handleMove);
         card.addEventListener('mouseleave', handleLeave);
       } else {
-        // Ensure card is neutral on touch devices
         card.style.transform = 'none';
         card.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
         card.style.setProperty('--light-x', `50%`);
         card.style.setProperty('--light-y', `50%`);
       }
 
-      // Basic anti-inspection protections (keeps original behaviour)
       document.addEventListener('contextmenu', event => event.preventDefault());
       document.addEventListener('keydown', function(event) {
           if (event.keyCode === 123) {
