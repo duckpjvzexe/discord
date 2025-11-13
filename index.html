@@ -19,24 +19,40 @@
       font-family: "Poppins", sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-  body {
-    background: url('https://files.catbox.moe/q7hhtp.jpeg') no-repeat center center fixed;
-    background-size: cover;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    color: var(--text);
-    overflow: hidden;
-  }
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: url('https://files.catbox.moe/q7hhtp.jpeg') no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      color: var(--text);
+      overflow-y: auto; /* allow scroll on small screens */
+      -webkit-overflow-scrolling: touch;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* overlay to improve contrast on mobile devices */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.45));
+      pointer-events: none;
+      z-index: 0;
+    }
 
     /* --- Card --- */
     .card {
       background: rgba(255,255,255,0.02);
-      border: 2px solid rgba(123,97,255,0.5);
       border-radius: var(--radius);
       padding: 40px 30px;
       max-width: 400px;
@@ -45,10 +61,12 @@
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
-      transition: transform 0.6s cubic-bezier(0.25,1,0.5,1), box-shadow 0.6s ease;
+      transition: transform 0.45s cubic-bezier(0.25,1,0.5,1), box-shadow 0.45s ease;
       transform-style: preserve-3d;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      z-index: 1;
+      border: 2px solid rgba(123,97,255,0.25);
     }
 
     .card::before {
@@ -56,10 +74,13 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.15), transparent 60%);
+      background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.12), transparent 55%);
       pointer-events: none;
-      transition: background 0.2s ease-out;
+      transition: background 0.18s ease-out;
+      border-radius: inherit;
     }
+
+    /* reduce expensive visuals on low-power or small screens via media queries below */
 
     /* --- Avatar --- */
     .avatar-wrapper {
@@ -74,6 +95,7 @@
       border-radius: 50%;
       overflow: hidden;
       background: var(--bg);
+      display: inline-block;
     }
 
     .avatar img.main {
@@ -95,24 +117,23 @@
       object-fit: contain;
     }
 
-  h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 20px;
-    transform: translateZ(30px);
-    animation: gradientMove 5s linear infinite;
-  }
-  
-  @keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+      transform: translateZ(30px);
+      animation: gradientMove 5s linear infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
     /* --- Social Icons --- */
     .social-icons {
@@ -133,17 +154,24 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       color: var(--text);
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .social-icon:focus {
+      outline: 3px solid rgba(123,97,255,0.25);
+      outline-offset: 3px;
     }
 
     .social-icon:hover {
       transform: translateY(-4px);
-      box-shadow: 0 0 18px rgba(0,240,255,0.3);
+      box-shadow: 0 0 18px rgba(0,240,255,0.18);
     }
 
     .social-icon.youtube:hover { background: #ff2e2e; color: #fff; }
     .social-icon.discord:hover { background: #5865F2; color: #fff; }
-    .social-icon.roblox:hover { background: #111; color: #fff; box-shadow: 0 0 18px rgba(255,255,255,0.2); }
+    .social-icon.roblox:hover { background: #111; color: #fff; box-shadow: 0 0 18px rgba(255,255,255,0.12); }
 
     /* --- Links --- */
     .links {
@@ -153,60 +181,123 @@
       transform: translateZ(20px);
     }
 
-  .link {
-    text-decoration: none;
-    font-weight: 600;
-    padding: 14px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.03);
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: all 0.3s ease;
-  }
-  
-  .link:hover {
-    background: #ff69b4;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 0 15px rgba(255,105,180,0.5);
-  }
+    .link {
+      text-decoration: none;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.25s ease;
+      display: block;
+      min-height: 44px; /* ensure large tap target */
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .link:focus {
+      outline: 3px solid rgba(0,240,255,0.18);
+      outline-offset: 3px;
+    }
+
+    .link:hover {
+      background: #ff69b4;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(255,105,180,0.3);
+    }
 
     footer {
-      margin-top: 30px;
-      font-size: 0.8rem;
+      margin-top: 26px;
+      font-size: 0.82rem;
       color: var(--muted);
       transform: translateZ(10px);
+    }
+
+    /* --- Accessibility & motion preferences --- */
+    @media (prefers-reduced-motion: reduce) {
+      h1 { animation: none; }
+      .card { transition: none; }
+      .card::before { transition: none; }
+      .social-icon, .link { transition: none; }
+    }
+
+    /* --- Mobile responsive tweaks --- */
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 12px;
+        background-attachment: scroll; /* avoid fixed background on mobile for performance */
+      }
+      .card {
+        padding: 20px 16px;
+        border-radius: 14px;
+        max-width: 520px;
+        width: calc(100% - 12px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        backdrop-filter: blur(8px); /* reduce blur on mobile */
+      }
+      .card::before {
+        background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.08), transparent 50%);
+      }
+      .avatar { width: 96px; height: 96px; }
+      .avatar-overlay { width: 110px; height: 110px; }
+      h1 { font-size: 1.2rem; margin-bottom: 14px; }
+      .social-icons { gap: 12px; margin-bottom: 18px; }
+      .social-icon { width: 56px; height: 56px; border-radius: 12px; }
+      .links .link { padding: 14px; border-radius: 12px; font-size: 0.98rem; }
+      footer { font-size: 0.78rem; margin-top: 18px; }
+    }
+
+    /* Remove 3D tilt and heavy transforms for touch-only devices */
+    @media (hover: none) {
+      .card { transform: none !important; transition: none; }
+      .card::before { transition: none; }
+      .social-icon:hover, .link:hover { transform: none; box-shadow: none; }
+    }
+
+    /* small screens */
+    @media (max-width: 380px) {
+      .card { padding: 16px 12px; border-radius: 12px; }
+      .avatar { width: 84px; height: 84px; }
+      .avatar-overlay { width: 96px; height: 96px; }
+      h1 { font-size: 1.05rem; }
+      .social-icon { width: 50px; height: 50px; }
+      .links .link { padding: 12px; font-size: 0.95rem; }
+      body::after { background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)); }
     }
   </style>
 </head>
 
 <body>
-  <div class="card" id="profileCard">
+  <div class="card" id="profileCard" role="region" aria-label="Thông tin DuckXKurumi">
     <div class="avatar-wrapper">
-      <div class="avatar">
+      <div class="avatar" aria-hidden="true">
         <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
       </div>
-      <img class="avatar-overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="Trang trí avatar">
+      <img class="avatar-overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="" aria-hidden="true">
     </div>
 
     <h1>DuckXKurumi</h1>
 
-    <div class="social-icons">
+    <div class="social-icons" role="navigation" aria-label="Liên kết mạng xã hội">
       <!-- YouTube -->
-      <a href="https://www.youtube.com/@vzduckrblx" class="social-icon youtube" title="YouTube" target="_blank">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <a href="https://www.youtube.com/@vzduckrblx" class="social-icon youtube" title="YouTube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M23.499 6.203a2.974 2.974 0 0 0-2.092-2.104C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.407.599A2.974 2.974 0 0 0 .501 6.203C0 8.116 0 12.001 0 12.001s0 3.884.501 5.798a2.974 2.974 0 0 0 2.092 2.104C4.495 20.5 12 20.5 12 20.5s7.505 0 9.407-.599a2.974 2.974 0 0 0 2.092-2.104C24 15.885 24 12.001 24 12.001s0-3.885-.501-5.798zM9.546 15.569V8.432L15.818 12l-6.272 3.569z"/>
         </svg>
       </a>
       <!-- Roblox -->
-      <a href="https://www.roblox.com/vi/users/7316872206/profile" class="social-icon roblox" title="Roblox" target="_blank">
-        <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor">
+      <a href="https://www.roblox.com/vi/users/7316872206/profile" class="social-icon roblox" title="Roblox" target="_blank" rel="noopener noreferrer" aria-label="Roblox">
+        <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
           <path d="M117.3 0L0 394.7 394.7 512 512 117.3 117.3 0zm181.3 330.7l-117.3-32 32-117.3 117.3 32-32 117.3z"></path>
         </svg>
       </a>
       <!-- Discord -->
-      <a href="https://discord.com/users/1133725784377405541" class="social-icon discord" title="Discord" target="_blank">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <a href="https://discord.com/users/1133725784377405541" class="social-icon discord" title="Discord" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
         </svg>
       </a>
@@ -221,50 +312,70 @@
   </div>
 
   <script>
-    const card = document.getElementById('profileCard');
+    (function () {
+      const card = document.getElementById('profileCard');
 
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
+      // Respect reduced motion and hover capability
+      const supportsHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const dx = x - r.width / 2;
-      const dy = y - r.height / 2;
+      // Only attach the 3D/tilt effect on devices that support hover & fine pointer (desktop)
+      if (supportsHover && !prefersReducedMotion) {
+        const handleMove = e => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left;
+          const y = e.clientY - r.top;
 
-      const rotateX = (dy / r.height) * 60;
-      const rotateY = -(dx / r.width) * 60;
+          const dx = x - r.width / 2;
+          const dy = y - r.height / 2;
 
-      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-      card.style.boxShadow = `0 0 50px rgba(123,97,255,0.4)`;
+          // soften effect for better UX
+          const rotateX = (dy / r.height) * 12; // reduced from 60
+          const rotateY = -(dx / r.width) * 12;
 
-      const percentX = (x / r.width) * 100;
-      const percentY = (y / r.height) * 100;
-      card.style.setProperty('--light-x', `${percentX}%`);
-      card.style.setProperty('--light-y', `${percentY}%`);
-    });
+          card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+          card.style.boxShadow = `0 16px 40px rgba(123,97,255,0.18)`;
 
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-      card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
-      card.style.setProperty('--light-x', `50%`);
-      card.style.setProperty('--light-y', `50%`);
-    });
+          const percentX = (x / r.width) * 100;
+          const percentY = (y / r.height) * 100;
+          card.style.setProperty('--light-x', `${percentX}%`);
+          card.style.setProperty('--light-y', `${percentY}%`);
+        };
 
-  document.addEventListener('contextmenu', event => event.preventDefault());
-  document.addEventListener('keydown', function(event) {
-      if (event.keyCode === 123) {
-          event.preventDefault();
-          return false;
+        const handleLeave = () => {
+          card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+          card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+          card.style.setProperty('--light-x', `50%`);
+          card.style.setProperty('--light-y', `50%`);
+        };
+
+        card.addEventListener('mousemove', handleMove);
+        card.addEventListener('mouseleave', handleLeave);
+      } else {
+        // Ensure card is neutral on touch devices
+        card.style.transform = 'none';
+        card.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
+        card.style.setProperty('--light-x', `50%`);
+        card.style.setProperty('--light-y', `50%`);
       }
-      if ((event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74))) {
-          event.preventDefault();
-          return false;
-      }
-      if (event.ctrlKey && event.keyCode === 85) {
-          event.preventDefault();
-          return false;
-      }
-  });
+
+      // Basic anti-inspection protections (keeps original behaviour)
+      document.addEventListener('contextmenu', event => event.preventDefault());
+      document.addEventListener('keydown', function(event) {
+          if (event.keyCode === 123) {
+              event.preventDefault();
+              return false;
+          }
+          if ((event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74))) {
+              event.preventDefault();
+              return false;
+          }
+          if (event.ctrlKey && event.keyCode === 85) {
+              event.preventDefault();
+              return false;
+          }
+      });
+    })();
   </script>
 </body>
 </html>
