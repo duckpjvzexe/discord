@@ -158,13 +158,15 @@
     font-weight: 600;
     padding: 14px;
     border-radius: 14px;
-    background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
-    color: #fff;
-    border: none;
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.08);
     transition: all 0.3s ease;
   }
   
   .link:hover {
+    background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
+    color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(0,240,255,0.3);
   }
