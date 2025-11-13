@@ -48,22 +48,31 @@
       transform-style: preserve-3d;
     }
 
+    /* --- Avatar --- */
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+
+    .avatar-border {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--neon1), var(--neon2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(123,97,255,0.3);
+    }
+
     .avatar {
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      margin: 0 auto 18px;
-      border: 3px solid transparent;
-      background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                  linear-gradient(135deg, var(--neon1), var(--neon2)) border-box;
       overflow: hidden;
-      box-shadow: 0 0 15px rgba(123,97,255,0.3);
-      transition: box-shadow 0.3s ease;
-      position: relative;
-    }
-
-    .avatar:hover {
-      box-shadow: 0 0 25px rgba(0,240,255,0.5);
+      background: var(--bg);
     }
 
     .avatar img.main {
@@ -74,13 +83,13 @@
       border-radius: 50%;
     }
 
-    .avatar img.overlay {
+    .avatar-overlay {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 130%;
-      height: 130%;
       transform: translate(-50%, -50%);
+      width: 140px;
+      height: 140px;
       pointer-events: none;
       object-fit: contain;
     }
@@ -96,6 +105,7 @@
       transform: translateZ(30px);
     }
 
+    /* --- Social Icons --- */
     .social-icons {
       display: flex;
       justify-content: center;
@@ -138,6 +148,7 @@
       box-shadow: 0 0 18px rgba(255,255,255,0.2);
     }
 
+    /* --- Links --- */
     .links {
       display: flex;
       flex-direction: column;
@@ -174,30 +185,35 @@
 
 <body>
   <div class="card" id="profileCard">
-    <div class="avatar">
-      <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
-      <img class="overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="Avatar decoration">
+
+    <div class="avatar-wrapper">
+      <div class="avatar-border">
+        <div class="avatar">
+          <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
+        </div>
+      </div>
+      <img class="avatar-overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="Trang trí avatar">
     </div>
 
     <h1>DuckXKurumi</h1>
 
     <div class="social-icons">
-      <!-- YOUTUBE -->
+      <!-- YouTube -->
       <a href="https://www.youtube.com/@example" class="social-icon youtube" title="YouTube" target="_blank">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           <path d="M23.499 6.203a2.974 2.974 0 0 0-2.092-2.104C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.407.599A2.974 2.974 0 0 0 .501 6.203C0 8.116 0 12.001 0 12.001s0 3.884.501 5.798a2.974 2.974 0 0 0 2.092 2.104C4.495 20.5 12 20.5 12 20.5s7.505 0 9.407-.599a2.974 2.974 0 0 0 2.092-2.104C24 15.885 24 12.001 24 12.001s0-3.885-.501-5.798zM9.546 15.569V8.432L15.818 12l-6.272 3.569z"/>
         </svg>
       </a>
 
-      <!-- ROBLOX -->
-      <a href="https://www.roblox.com/vi/users/xxxxx/profile" class="social-icon roblox" title="Roblox" target="_blank">
+      <!-- Roblox -->
+      <a href="https://www.roblox.com/vi/users/3244303838/profile" class="social-icon roblox" title="Roblox" target="_blank">
         <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor">
           <path d="M117.3 0L0 394.7 394.7 512 512 117.3 117.3 0zm181.3 330.7l-117.3-32 32-117.3 117.3 32-32 117.3z"></path>
         </svg>
       </a>
 
-      <!-- DISCORD -->
-      <a href="https://discord.com/users/xxxxx" class="social-icon discord" title="Discord" target="_blank">
+      <!-- Discord -->
+      <a href="https://discord.com/users/1248562467240542208" class="social-icon discord" title="Discord" target="_blank">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
         </svg>
@@ -212,26 +228,26 @@
   </div>
 
   <script>
-    const card = document.getElementById('profileCard');
+  const card = document.getElementById('profileCard');
+  
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
 
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const rotateX = ((y - centerY) / 15) * -1;
-      const rotateY = (x - centerX) / 15;
-
-      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
-      card.style.boxShadow = `0 0 35px rgba(123,97,255,0.3)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
-      card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
-    });
+    const rotateX = ((y - r.height / 2) / 8) * -1;
+    const rotateY = (x - r.width / 2) / 8;
+  
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    card.style.transition = 'transform 0.05s ease-out';
+    card.style.boxShadow = `0 0 45px rgba(123,97,255,0.4)`;
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease';
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+  });
   </script>
 </body>
 </html>
