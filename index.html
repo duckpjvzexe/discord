@@ -34,6 +34,7 @@
       overflow: hidden;
     }
 
+    /* --- Card --- */
     .card {
       background: rgba(255,255,255,0.05);
       border-radius: var(--radius);
@@ -44,39 +45,27 @@
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
-      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+      transition: transform 0.6s cubic-bezier(0.25,1,0.5,1), box-shadow 0.6s ease;
       transform-style: preserve-3d;
       position: relative;
       overflow: hidden;
-  }
-  
-  .card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.15), transparent 60%);
-    pointer-events: none;
-    transition: background 0.2s ease-out;
-  }
-    
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at var(--light-x,50%) var(--light-y,50%), rgba(255,255,255,0.15), transparent 60%);
+      pointer-events: none;
+      transition: background 0.2s ease-out;
+    }
+
     /* --- Avatar --- */
     .avatar-wrapper {
       position: relative;
       display: inline-block;
       margin-bottom: 18px;
-    }
-
-    .avatar-border {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      padding: 3px;
-      background: linear-gradient(135deg, var(--neon1), var(--neon2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 25px rgba(123,97,255,0.3);
     }
 
     .avatar {
@@ -144,21 +133,9 @@
       box-shadow: 0 0 18px rgba(0,240,255,0.3);
     }
 
-    .social-icon.youtube:hover {
-      background: #ff2e2e;
-      color: #fff;
-    }
-
-    .social-icon.discord:hover {
-      background: #5865F2;
-      color: #fff;
-    }
-
-    .social-icon.roblox:hover {
-      background: #111;
-      color: #fff;
-      box-shadow: 0 0 18px rgba(255,255,255,0.2);
-    }
+    .social-icon.youtube:hover { background: #ff2e2e; color: #fff; }
+    .social-icon.discord:hover { background: #5865F2; color: #fff; }
+    .social-icon.roblox:hover { background: #111; color: #fff; box-shadow: 0 0 18px rgba(255,255,255,0.2); }
 
     /* --- Links --- */
     .links {
@@ -197,12 +174,9 @@
 
 <body>
   <div class="card" id="profileCard">
-
     <div class="avatar-wrapper">
-      <div class="avatar-border">
-        <div class="avatar">
-          <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
-        </div>
+      <div class="avatar">
+        <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
       </div>
       <img class="avatar-overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="Trang trí avatar">
     </div>
@@ -216,14 +190,12 @@
           <path d="M23.499 6.203a2.974 2.974 0 0 0-2.092-2.104C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.407.599A2.974 2.974 0 0 0 .501 6.203C0 8.116 0 12.001 0 12.001s0 3.884.501 5.798a2.974 2.974 0 0 0 2.092 2.104C4.495 20.5 12 20.5 12 20.5s7.505 0 9.407-.599a2.974 2.974 0 0 0 2.092-2.104C24 15.885 24 12.001 24 12.001s0-3.885-.501-5.798zM9.546 15.569V8.432L15.818 12l-6.272 3.569z"/>
         </svg>
       </a>
-
       <!-- Roblox -->
       <a href="https://www.roblox.com/vi/users/3244303838/profile" class="social-icon roblox" title="Roblox" target="_blank">
         <svg width="24" height="24" viewBox="0 0 512 512" fill="currentColor">
           <path d="M117.3 0L0 394.7 394.7 512 512 117.3 117.3 0zm181.3 330.7l-117.3-32 32-117.3 117.3 32-32 117.3z"></path>
         </svg>
       </a>
-
       <!-- Discord -->
       <a href="https://discord.com/users/1248562467240542208" class="social-icon discord" title="Discord" target="_blank">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -240,31 +212,34 @@
   </div>
 
   <script>
-  const card = document.getElementById('profileCard');
-  
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-  
-    const rotateX = ((y - r.height / 2) / 6) * -1;
-    const rotateY = (x - r.width / 2) / 6;
-  
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-    card.style.boxShadow = `0 0 50px rgba(123,97,255,0.4)`;
-  
-    const percentX = (x / r.width) * 100;
-    const percentY = (y / r.height) * 100;
-    card.style.setProperty('--light-x', `${percentX}%`);
-    card.style.setProperty('--light-y', `${percentY}%`);
-  });
-  
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-    card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
-    card.style.setProperty('--light-x', `50%`);
-    card.style.setProperty('--light-y', `50%`);
-  });
+    const card = document.getElementById('profileCard');
+
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+
+      const dx = x - r.width / 2;
+      const dy = y - r.height / 2;
+
+      const rotateX = (dy / r.height) * 20;
+      const rotateY = -(dx / r.width) * 20;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      card.style.boxShadow = `0 0 50px rgba(123,97,255,0.4)`;
+
+      const percentX = (x / r.width) * 100;
+      const percentY = (y / r.height) * 100;
+      card.style.setProperty('--light-x', `${percentX}%`);
+      card.style.setProperty('--light-y', `${percentY}%`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+      card.style.setProperty('--light-x', `50%`);
+      card.style.setProperty('--light-y', `50%`);
+    });
   </script>
 </body>
 </html>
