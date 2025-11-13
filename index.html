@@ -31,6 +31,7 @@
       justify-content: center;
       padding: 40px 20px;
       color: var(--text);
+      overflow: hidden;
     }
 
     .card {
@@ -43,12 +44,8 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 35px rgba(123,97,255,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transform-style: preserve-3d;
     }
 
     .avatar {
@@ -62,16 +59,30 @@
       overflow: hidden;
       box-shadow: 0 0 15px rgba(123,97,255,0.3);
       transition: box-shadow 0.3s ease;
+      position: relative;
     }
 
     .avatar:hover {
       box-shadow: 0 0 25px rgba(0,240,255,0.5);
     }
 
-    .avatar img {
+    .avatar img.main {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .avatar img.overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 130%;
+      height: 130%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      object-fit: contain;
     }
 
     h1 {
@@ -82,14 +93,15 @@
       background-clip: text;
       color: transparent;
       margin-bottom: 20px;
+      transform: translateZ(30px);
     }
 
-    /* --- Social Icons --- */
     .social-icons {
       display: flex;
       justify-content: center;
       gap: 16px;
       margin-bottom: 25px;
+      transform: translateZ(25px);
     }
 
     .social-icon {
@@ -126,11 +138,11 @@
       box-shadow: 0 0 18px rgba(255,255,255,0.2);
     }
 
-    /* --- Links --- */
     .links {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      transform: translateZ(20px);
     }
 
     .link {
@@ -155,15 +167,18 @@
       margin-top: 30px;
       font-size: 0.8rem;
       color: var(--muted);
+      transform: translateZ(10px);
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
+  <div class="card" id="profileCard">
     <div class="avatar">
-      <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?q=80&w=400" alt="Avatar">
+      <img class="main" src="https://files.catbox.moe/hj0xae.webp" alt="Avatar chính">
+      <img class="overlay" src="https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=80&passthrough=true" alt="Avatar decoration">
     </div>
+
     <h1>DuckXKurumi</h1>
 
     <div class="social-icons">
@@ -189,12 +204,34 @@
       </a>
     </div>
 
-    <!-- Link List -->
     <div class="links">
       <a href="#" class="link">🌐 Website chính</a>
     </div>
 
     <footer>© 2025 DuckXKurumi</footer>
   </div>
+
+  <script>
+    const card = document.getElementById('profileCard');
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / 15) * -1;
+      const rotateY = (x - centerX) / 15;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+      card.style.boxShadow = `0 0 35px rgba(123,97,255,0.3)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+      card.style.boxShadow = '0 0 25px rgba(0,0,0,0.5)';
+    });
+  </script>
 </body>
 </html>
