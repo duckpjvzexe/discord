@@ -153,16 +153,18 @@
       transform: translateZ(20px);
     }
 
-    .link {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 600;
-      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px;
-      transition: all 0.2s ease;
-    }
+  .link {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 14px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #ff69b4, #800080, #ffffff, #00ffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.2s ease;
+  }
 
     .link:hover {
       background: linear-gradient(90deg, var(--neon1), var(--neon2));
