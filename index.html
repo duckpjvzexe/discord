@@ -213,8 +213,8 @@
     </div>
 
     <div class="links">
-      <a href="https://duckcmnt-executors.vercel.app/" class="link">🌐 Free Executors Roblox Download</a>
-      <a href="https://shopduckrbx.store/" class="link">🛒 My Shop</a>
+      <a href="https://duckcmnt-executors.vercel.app/" class="link">Executors Roblox</a>
+      <a href="https://shopduckrbx.store/" class="link">My Shop</a>
     </div>
 
     <footer>© 2025 DuckXKurumi</footer>
@@ -249,6 +249,22 @@
       card.style.setProperty('--light-x', `50%`);
       card.style.setProperty('--light-y', `50%`);
     });
+
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('keydown', function(event) {
+      if (event.keyCode === 123) {
+          event.preventDefault();
+          return false;
+      }
+      if ((event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74))) {
+          event.preventDefault();
+          return false;
+      }
+      if (event.ctrlKey && event.keyCode === 85) {
+          event.preventDefault();
+          return false;
+      }
+  });
   </script>
 </body>
 </html>
