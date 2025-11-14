@@ -380,10 +380,9 @@
     <footer>© 2025 DuckXKurumi</footer>
   </div>
 
-  <!-- Delayed navigation popup -->
   <div id="delayedPopup" class="delayed-popup" role="status" aria-live="polite" aria-atomic="true" hidden>
     <div class="message">
-      Preparing to redirect to link. Please wait. <span id="delayCount" class="count">3</span>s...
+      Preparing to redirect to link. Please wait. <span id="delayCount" class="count">5</span>s...
     </div>
     <div class="controls" aria-hidden="false">
       <button id="cancelBtn" class="btn" type="button" title="Cancel">Cancel</button>
@@ -459,7 +458,7 @@
       let countdownTimer = null;
       let progressTimer = null;
       let remaining = 0;
-      let totalDelay = 3000; // ms
+      let totalDelay = 5000;
       let startTime = 0;
       let pendingHref = null;
       let pendingTarget = null;
