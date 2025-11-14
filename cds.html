@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Đang chuyển hướng…</title>
+
+  <meta http-equiv="refresh" content="0; url=https://example.com">
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Poppins",sans-serif;
+         height:100vh;display:flex;align-items:center;justify-content:center;
+         margin:0;background:#0b0f1a;color:#fff}
+    .box{max-width:520px;padding:20px;border-radius:12px;text-align:center}
+    a{color:#ffd26b}
+  </style>
+</head>
+<body>
+  <div class="box" role="status" aria-live="polite">
+    <h1>Đang chuyển hướng...</h1>
+    <p>Nếu trình duyệt không chuyển trong giây lát, bấm <a id="fallback" href="https://example.com">vào đây</a>.</p>
+  </div>
+
+  <script>
+    (function () {
+      var target = 'https://example.com';
+
+      setTimeout(function () {
+        if (location.href !== target) {
+          try { window.location.replace(target); } catch (e) { location.href = target; }
+        }
+      }, 1500);
+    })();
+  </script>
+</body>
+</html>
