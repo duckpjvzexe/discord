@@ -2,31 +2,91 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Đang chuyển hướng…</title>
 
-  <meta http-equiv="refresh" content="0; url=https://example.com">
+  <meta http-equiv="refresh" content="3; url=https://github.com/duckpjvzexe/projectscript112247/raw/refs/heads/main/cds.user.js">
+
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Poppins",sans-serif;
-         height:100vh;display:flex;align-items:center;justify-content:center;
-         margin:0;background:#0b0f1a;color:#fff}
-    .box{max-width:520px;padding:20px;border-radius:12px;text-align:center}
-    a{color:#ffd26b}
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Poppins", sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0b0f1a, #1b2236);
+      color: #fff;
+    }
+
+    .box {
+      max-width: 480px;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      animation: fadeIn 0.8s ease;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.9rem;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+
+    a {
+      color: #ffd26b;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .loader {
+      margin: 18px auto;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #ffd26b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
   <div class="box" role="status" aria-live="polite">
     <h1>Đang chuyển hướng...</h1>
-    <p>Nếu trình duyệt không chuyển trong giây lát, bấm <a id="fallback" href="https://example.com">vào đây</a>.</p>
+    <div class="loader"></div>
+    <p>Nếu trình duyệt không tự chuyển, hãy bấm <a id="fallback" href="https://github.com/duckpjvzexe/projectscript112247/raw/refs/heads/main/cds.user.js">vào đây</a>.</p>
   </div>
 
   <script>
     (function () {
-      var target = 'https://example.com';
+      var target = 'https://github.com/duckpjvzexe/projectscript112247/raw/refs/heads/main/cds.user.js';
+      document.getElementById('fallback').href = target;
 
       setTimeout(function () {
         if (location.href !== target) {
-          try { window.location.replace(target); } catch (e) { location.href = target; }
+          try { window.location.replace(target); } 
+          catch (e) { location.href = target; }
         }
       }, 1500);
     })();
