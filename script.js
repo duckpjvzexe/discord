@@ -192,3 +192,17 @@
       if (popup) observer.observe(popup, { attributes: true, attributeFilter: ['class'] });
 
     })();
+
+// Dropdown toggle
+const dropdown = document.querySelector('.dropdown');
+const dropdownBtn = document.querySelector('.dropdown-btn');
+
+dropdownBtn.addEventListener('click', () => {
+  dropdown.classList.toggle('open');
+});
+
+document.addEventListener('click', function (e) {
+  if (!dropdown.contains(e.target)) {
+    dropdown.classList.remove('open');
+  }
+});
