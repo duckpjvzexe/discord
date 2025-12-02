@@ -193,7 +193,7 @@
 
     })();
 
-// Dropdown toggle
+// Floating dropdown
 const dropdown = document.querySelector('.dropdown');
 const dropdownBtn = document.querySelector('.dropdown-btn');
 
@@ -201,7 +201,8 @@ dropdownBtn.addEventListener('click', () => {
   dropdown.classList.toggle('open');
 });
 
-document.addEventListener('click', function (e) {
+// Click ngoài để đóng
+document.addEventListener('click', (e) => {
   if (!dropdown.contains(e.target)) {
     dropdown.classList.remove('open');
   }
