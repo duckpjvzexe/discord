@@ -327,3 +327,40 @@
       .links .link { padding: 12px; font-size: 0.95rem; }
       body::after { background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)); }
     }
+
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-btn {
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  animation: fadeDown 0.25s ease;
+}
+
+.dropdown.open .dropdown-menu {
+  display: flex;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  background: rgba(255,255,255,0.05) !important;
+  font-size: 0.9rem;
+}
