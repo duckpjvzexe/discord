@@ -45,17 +45,31 @@ header{
     font-size:1.2rem;
 }
 
-nav a{
+nav a.nav-btn{
     display:flex;
     align-items:center;
     gap:8px;
+
+    padding:8px 14px;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:10px;
+
     color:#aaa;
     text-decoration:none;
     font-size:.9rem;
+    font-weight:500;
+
+    background:transparent;
+    transition:
+        color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
 }
 
-nav a:hover{
+nav a.nav-btn:hover{
     color:#fff;
+    border-color:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,.25);
 }
 
 .section{
@@ -256,7 +270,7 @@ button.loading::after{
 <header>
     <div class="logo">DuckXKurumi - Materials</div>
     <nav>
-      <a href="https://discord.gg/ekxRybWgmh">
+      <a href="https://discord.gg/ekxRybWgmh" class="nav-btn">
         <i class="fa-brands fa-discord"></i>
         Discord
       </a>
