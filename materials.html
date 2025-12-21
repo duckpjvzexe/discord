@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MediaFire Auto Download</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 *{
     margin:0;
@@ -166,13 +168,49 @@ button.loading::after{
     color:#9aa0a6;
 }
 
-/* mobile */
 @media(max-width:600px){
     .card{
         flex-direction:column;
         text-align:center;
     }
 }
+
+.refresh-btn{
+    background:transparent;
+    border:none;
+    color:#fff;
+    font-size:1.1rem;
+    cursor:pointer;
+    padding:6px;
+    border-radius:50%;
+    transition:background .2s;
+}
+
+.refresh-btn:hover{
+    background:rgba(255,255,255,.1);
+}
+
+.refresh-btn.spin i{
+    animation: refresh-spin .8s linear infinite;
+}
+
+@keyframes refresh-spin{
+    to{ transform:rotate(360deg); }
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+}
+
+.section-header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
 </style>
 </head>
 
@@ -188,12 +226,19 @@ button.loading::after{
 </header>
 
 <div class="section">
-    <h1>Materials</h1>
+
+    <div class="section-header">
+        <div class="section-header-left">
+            <h1>Materials</h1>
+            <button class="refresh-btn" id="refreshPage" title="Refresh">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
     <p>Below are the materials we used.</p>
 
     <div id="cardsContainer"></div>
-</div>
-
 </div>
 
 <script>
@@ -278,6 +323,17 @@ files.forEach(file=>{
             status.textContent="Connection error";
         });
 });
+
+const refreshBtn = document.getElementById("refreshPage");
+
+refreshBtn.onclick = () => {
+    refreshBtn.classList.add("spin");
+
+    setTimeout(() => {
+        location.reload();
+    }, 800);
+};
+
 </script>
 
 </body>
