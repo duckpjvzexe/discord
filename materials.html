@@ -265,12 +265,10 @@ button.loading::after{
     align-items:center;
     gap:10px;
 
-    max-width:420px;
-    margin-bottom:28px;
+    width:260px;
+    padding:8px 14px;
 
-    padding:10px 14px;
-    border-radius:14px;
-
+    border-radius:12px;
     background:rgba(255,255,255,.05);
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
 }
@@ -293,6 +291,32 @@ button.loading::after{
 .search-box input::placeholder{
     color:#888;
 }
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.section-header-right{
+    display:flex;
+    align-items:center;
+}
+
+@media (max-width: 700px){
+    .section-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:16px;
+    }
+
+    .section-header-right,
+    .search-box{
+        width:100%;
+    }
+}
+
 </style>
     
 </head>
@@ -320,16 +344,27 @@ button.loading::after{
                 <i class="fa fa-refresh" aria-hidden="true"></i>
             </button>
         </div>
-    </div>
 
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search materials..."
-        autocomplete="off"
-      >
+        <div class="section-header">
+          <div class="section-header-left">
+            <h1>Materials</h1>
+            <button class="refresh-btn" id="refreshPage" title="Refresh">
+              <i class="fa fa-refresh"></i>
+            </button>
+          </div>
+        
+          <div class="section-header-right">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search..."
+                autocomplete="off"
+              >
+            </div>
+          </div>
+        </div>
     </div>
 
     <p>Below are the materials we used.</p>
