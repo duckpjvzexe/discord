@@ -298,16 +298,32 @@ const API_ENDPOINT = "/api/mediafire";
 
 const files = [
   {
-    url: "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file",
+    id: "0u0w9sa62hqq1oj",
     logo: "https://files.catbox.moe/c1xa3o.ico"
   },
   {
-    url: "https://www.mediafire.com/file/EXAMPLE2/file",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/0/02/PDF_icon.svg"
+    id: "8v3sjm75zec5kr9",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
+  },
+  {
+    id: "hbkgj1ado9rg4oc",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
+  },
+  {
+    id: "662nf9lyye36ol2",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
+  },
+  {
+    id: "cwyt9dkyz977bla",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
   }
 ];
 
 const container = document.getElementById("cardsContainer");
+
+function buildMediaFireUrl(fileId){
+  return `https://www.mediafire.com/file/${fileId}`;
+}
 
 async function fetchMediaFireInfo(mediafireUrl) {
   try {
@@ -348,7 +364,8 @@ async function createCard(file) {
   const btn = card.querySelector("button");
   const status = card.querySelector(".status");
 
-  const info = await fetchMediaFireInfo(file.url);
+  const mediafireUrl = buildMediaFireUrl(file.id);
+  const info = await fetchMediaFireInfo(mediafireUrl);
 
   if (!info) {
     nameEl.textContent = "Cannot fetch file";
