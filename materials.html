@@ -176,18 +176,26 @@ button.loading::after{
 }
 
 .refresh-btn{
-    background:transparent;
-    border:none;
-    color:#fff;
-    font-size:1.1rem;
-    cursor:pointer;
-    padding:6px;
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#000;
+    border:1px solid transparent;
     border-radius:50%;
-    transition:background .2s;
+
+    color:#fff;
+    font-size:0.95rem;
+    cursor:pointer;
+
+    transition:.25s ease;
 }
 
 .refresh-btn:hover{
-    background:rgba(255,255,255,.1);
+    border-color:#fff;
+    box-shadow:0 0 6px rgba(255,255,255,.35);
 }
 
 .refresh-btn.spin i{
