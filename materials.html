@@ -136,6 +136,30 @@ button:disabled{
     box-shadow:none;
 }
 
+button.loading{
+    position: relative;
+    pointer-events: none;
+    color: transparent;
+}
+
+button.loading::after{
+    content:"";
+    width:16px;
+    height:16px;
+    border:2px solid #000;
+    border-top-color: transparent;
+    border-radius:50%;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin{
+    to{ transform:translate(-50%,-50%) rotate(360deg); }
+}
+
 .status{
     margin-top:8px;
     font-size:.85rem;
@@ -224,10 +248,31 @@ files.forEach(file=>{
 
             status.textContent="Ready to download";
             btn.disabled=false;
-            btn.onclick=()=>{
-                status.textContent="Loading...";
-                window.location.href=link;
-            }
+            btn.onclick = () => {
+                if (btn.classList.contains("loading")) return;
+            
+                btn.classList.add("loading");
+                btn.disabled = true;
+                status.textContent = "Downloading...";
+            
+                window.location.href = link;
+            
+                let countdown = 5;
+                const originalText = "Download";
+            
+                const timer = setInterval(() => {
+                    status.textContent = `Please wait ${countdown}s before downloading again`;
+                    countdown--;
+            
+                    if (countdown < 0) {
+                        clearInterval(timer);
+                        btn.classList.remove("loading");
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                        status.textContent = "Ready to download";
+                    }
+                }, 1000);
+            };
         })
         .catch(()=>{
             status.textContent="Connection error";
