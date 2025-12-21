@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>MediaFire Auto Download</title>
+</head>
+<body>
+
+<h3>MediaFire Auto Download</h3>
+
+<input id="mf"
+       style="width:600px"
+       placeholder="https://www.mediafire.com/file/.../file">
+
+<button onclick="download()">Tải ngay</button>
+
+<script>
+async function download() {
+    const url = document.getElementById("mf").value.trim();
+    if (!url) return alert("Chưa nhập link");
+
+    // Proxy để vượt CORS
+    const proxy = "https://api.allorigins.win/raw?url=";
+
+    try {
+        const res = await fetch(proxy + encodeURIComponent(url));
+        const html = await res.text();
+
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const btn = doc.querySelector("#downloadButton");
+
+        if (!btn) return alert("Không tìm thấy link tải");
+
+        // Redirect để tải file
+        window.location.href = btn.href;
+
+    } catch (e) {
+        alert("Lỗi tải link");
+    }
+}
+</script>
+
+</body>
+</html>
