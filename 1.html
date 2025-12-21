@@ -34,10 +34,22 @@ h1 {
     margin-bottom:20px;
     box-shadow:0 10px 30px rgba(0,0,0,0.2);
     transition: transform 0.3s, box-shadow 0.3s;
+    text-align:center;
 }
 .card:hover {
     transform: translateY(-5px);
     box-shadow:0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* File logo */
+.card img.logo {
+    width:80px;
+    height:80px;
+    object-fit:contain;
+    margin-bottom:15px;
+    border-radius:15px;
+    background: rgba(255,255,255,0.15);
+    padding:10px;
 }
 
 /* File name */
@@ -76,6 +88,7 @@ button:hover {
 @media(max-width:600px){
     .card { padding:20px; border-radius:15px; }
     button { width:100%; }
+    .card img.logo { width:60px; height:60px; }
 }
 </style>
 </head>
@@ -85,13 +98,15 @@ button:hover {
 
 <!-- Card 1 -->
 <div class="card">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/33/Android_robot.png" alt="File Logo">
     <p class="filename">CodexSamehwidGlobal-2.701.966.apk</p>
     <button onclick="download('https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file', this)">Tải File</button>
     <p class="status"></p>
 </div>
 
-<!-- Card 2 (ví dụ thêm link khác) -->
+<!-- Card 2 -->
 <div class="card">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/33/Android_robot.png" alt="File Logo">
     <p class="filename">ExampleFile-2.apk</p>
     <button onclick="download('https://www.mediafire.com/file/EXAMPLE2/file', this)">Tải File</button>
     <p class="status"></p>
