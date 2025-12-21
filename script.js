@@ -36,6 +36,14 @@ const files = [
   {
     id: "pgvpqnoutkkwap8",
     logo: "https://files.catbox.moe/rok1a4.webp"
+  },
+  {
+    id: "44ffz31chfqd34q",
+    logo: "https://files.catbox.moe/unn1vd.webp"
+  },
+  {
+    id: "8jbjgjhtqxo6yvk",
+    logo: "https://files.catbox.moe/7aua3l.webp"
   }
 ];
 
