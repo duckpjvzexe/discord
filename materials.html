@@ -260,7 +260,41 @@ button.loading::after{
     gap:12px;
 }
 
+.search-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    max-width:420px;
+    margin-bottom:28px;
+
+    padding:10px 14px;
+    border-radius:14px;
+
+    background:rgba(255,255,255,.05);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.search-box i{
+    color:#aaa;
+    font-size:.9rem;
+}
+
+.search-box input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+
+    color:#fff;
+    font-size:.95rem;
+}
+
+.search-box input::placeholder{
+    color:#888;
+}
 </style>
+    
 </head>
 
 <body>
@@ -286,6 +320,16 @@ button.loading::after{
                 <i class="fa fa-refresh" aria-hidden="true"></i>
             </button>
         </div>
+    </div>
+
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search materials..."
+        autocomplete="off"
+      >
     </div>
 
     <p>Below are the materials we used.</p>
@@ -374,6 +418,7 @@ async function createCard(file) {
   }
 
   nameEl.textContent = info.name;
+  card.dataset.filename = info.name.toLowerCase();
   status.textContent = "Ready to download";
   btn.disabled = false;
 
@@ -411,6 +456,19 @@ refreshBtn.onclick = () => {
   refreshBtn.classList.add("spin");
   setTimeout(() => location.reload(), 800);
 };
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", () => {
+  const keyword = searchInput.value.toLowerCase().trim();
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    const name = card.dataset.filename || "";
+    card.style.display = name.includes(keyword) ? "" : "none";
+  });
+});
+
 </script>
 
 </body>
