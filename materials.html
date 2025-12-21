@@ -14,27 +14,27 @@ body {
     color:#fff;
 }
 h1 { font-size:2.2rem; margin-bottom:30px; text-align:center; text-shadow: 1px 1px 6px rgba(0,0,0,0.3);}
+
+#cardsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
 .card {
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(12px);
-    padding:25px 30px;
+    padding:25px 20px;
     border-radius:20px;
-    width:100%;
-    max-width:500px;
-    margin-bottom:20px;
+    text-align:center;
     box-shadow:0 10px 30px rgba(0,0,0,0.2);
     transition: transform 0.3s, box-shadow 0.3s;
-    text-align:center;
 }
 .card:hover { transform: translateY(-5px); box-shadow:0 15px 35px rgba(0,0,0,0.3);}
 .card img.logo {
-    width:80px;
-    height:80px;
-    object-fit:contain;
-    margin-bottom:15px;
-    border-radius:15px;
-    background: rgba(255,255,255,0.15);
-    padding:10px;
+    width:80px; height:80px; object-fit:contain; margin-bottom:15px;
+    border-radius:15px; background: rgba(255,255,255,0.15); padding:10px;
 }
 .card p.filename { font-size:1.1rem; font-weight:500; margin-bottom:15px;}
 button {
@@ -43,7 +43,8 @@ button {
 }
 button:hover { background:#ff4757; transform: translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.3);}
 .status { margin-top:10px; font-size:0.95rem; color:#f1f1f1;}
-@media(max-width:600px){ .card { padding:20px; border-radius:15px; } button{width:100%;} .card img.logo { width:60px; height:60px;} }
+@media(max-width:800px){ #cardsContainer { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } .card img.logo { width:60px; height:60px; } }
+@media(max-width:500px){ #cardsContainer { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -53,20 +54,11 @@ button:hover { background:#ff4757; transform: translateY(-3px); box-shadow:0 8px
 <div id="cardsContainer"></div>
 
 <script>
-// Mảng dữ liệu: url + logo riêng
 const files = [
-  {
-    url: "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Android_robot.png"
-  },
-  {
-    url: "https://www.mediafire.com/file/EXAMPLE2/file",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/0/02/PDF_icon.svg"
-  },
-  {
-    url: "https://www.mediafire.com/file/EXAMPLE3/file",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Zip_icon.svg"
-  }
+  { url: "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Android_robot.png" },
+  { url: "https://www.mediafire.com/file/EXAMPLE2/file", logo: "https://upload.wikimedia.org/wikipedia/commons/0/02/PDF_icon.svg" },
+  { url: "https://www.mediafire.com/file/EXAMPLE3/file", logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Zip_icon.svg" },
+  { url: "https://www.mediafire.com/file/EXAMPLE4/file", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/File_icon.png" }
 ];
 
 const proxy = "https://api.allorigins.win/raw?url=";
@@ -110,9 +102,7 @@ files.forEach(file => {
                 window.location.href = downloadLink;
             }
         })
-        .catch(() => {
-            status.textContent = "Lỗi kết nối MediaFire 😵";
-        });
+        .catch(() => { status.textContent = "Lỗi kết nối MediaFire 😵"; });
 });
 </script>
 
