@@ -249,8 +249,9 @@ button.loading::after{
     <div id="cardsContainer"></div>
 </div>
 
-<script src="/mediafire-fetch.js"></script>
 <script>
+const API_ENDPOINT = "/api/mediafire";
+
 const files = [
   {
     url: "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file",
@@ -264,65 +265,90 @@ const files = [
 
 const container = document.getElementById("cardsContainer");
 
+async function fetchMediaFireInfo(mediafireUrl) {
+  try {
+    const res = await fetch(
+      `${API_ENDPOINT}?url=${encodeURIComponent(mediafireUrl)}`
+    );
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+
+    if (!data.fileName || !data.downloadUrl) return null;
+
+    return {
+      name: data.fileName,
+      download: data.downloadUrl
+    };
+  } catch (e) {
+    console.error("Fetch error:", e);
+    return null;
+  }
+}
+
 async function createCard(file) {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-        <img class="logo-img" src="${file.logo}">
-        <div class="content">
-            <div class="filename">Loading...</div>
-            <button disabled>Download</button>
-            <div class="status">Fetching info...</div>
-        </div>
-    `;
-    container.appendChild(card);
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <img class="logo-img" src="${file.logo}">
+    <div class="content">
+      <div class="filename">Loading...</div>
+      <button disabled>Download</button>
+      <div class="status">Fetching info...</div>
+    </div>
+  `;
+  container.appendChild(card);
 
-    const nameEl = card.querySelector(".filename");
-    const btn = card.querySelector("button");
-    const status = card.querySelector(".status");
+  const nameEl = card.querySelector(".filename");
+  const btn = card.querySelector("button");
+  const status = card.querySelector(".status");
 
-    const info = await fetchMediaFireInfo(file.url);
+  const info = await fetchMediaFireInfo(file.url);
 
-    if (!info) {
-        nameEl.textContent = "Unknown file";
-        status.textContent = "Connection error";
-        return;
-    }
+  if (!info) {
+    nameEl.textContent = "Cannot fetch file";
+    status.textContent = "MediaFire blocked or error";
+    return;
+  }
 
-    nameEl.textContent = info.name;
-    status.textContent = "Ready to download";
-    btn.disabled = false;
+  nameEl.textContent = info.name;
+  status.textContent = "Ready to download";
+  btn.disabled = false;
 
-    btn.onclick = () => handleDownload(btn, status, info.download);
+  btn.onclick = () => handleDownload(btn, status, info.download);
 }
 
 function handleDownload(btn, status, link) {
-    if (btn.classList.contains("loading")) return;
+  if (btn.classList.contains("loading")) return;
 
-    btn.classList.add("loading");
-    btn.disabled = true;
-    window.location.href = link;
+  btn.classList.add("loading");
+  btn.disabled = true;
 
-    let wait = 5;
-    const timer = setInterval(() => {
-        status.textContent = `Please wait ${wait}s`;
-        wait--;
+  window.location.href = link;
 
-        if (wait < 0) {
-            clearInterval(timer);
-            btn.classList.remove("loading");
-            btn.disabled = false;
-            status.textContent = "Ready to download";
-        }
-    }, 1000);
+  let wait = 5;
+  status.textContent = `Please wait ${wait}s`;
+
+  const timer = setInterval(() => {
+    wait--;
+    status.textContent = `Please wait ${wait}s`;
+
+    if (wait < 0) {
+      clearInterval(timer);
+      btn.classList.remove("loading");
+      btn.disabled = false;
+      status.textContent = "Ready to download";
+    }
+  }, 1000);
 }
 
 files.forEach(createCard);
 
 const refreshBtn = document.getElementById("refreshPage");
 refreshBtn.onclick = () => {
-    refreshBtn.classList.add("spin");
-    setTimeout(() => location.reload(), 800);
+  refreshBtn.classList.add("spin");
+  setTimeout(() => location.reload(), 800);
 };
 </script>
 
