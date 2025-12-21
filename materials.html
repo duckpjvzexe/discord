@@ -194,8 +194,21 @@ button.loading::after{
 }
 
 .refresh-btn:hover{
+    background:#000;
     border-color:#fff;
     box-shadow:0 0 6px rgba(255,255,255,.35);
+}
+
+.refresh-btn:active{
+    background:#000 !important;
+    border-color:#fff;
+}
+
+.refresh-btn:focus,
+.refresh-btn:focus-visible{
+    background:#000 !important;
+    outline:none;
+    border-color:#fff;
 }
 
 .refresh-btn.spin i{
@@ -229,7 +242,7 @@ button.loading::after{
 <header>
     <div class="logo">DuckXKurumi - Materials</div>
     <nav>
-        <a href="https://discord.gg/ekxRybWgmh">Discord</a>
+        <a href="https://discord.gg/ekxRybWgmh"><i class="fa-brands fa-discord"></i>Discord</a>
     </nav>
 </header>
 
