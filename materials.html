@@ -317,6 +317,35 @@ button.loading::after{
     }
 }
 
+::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:rgba(255,255,255,.04);
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.18);
+    border-radius:10px;
+    border:2px solid rgba(0,0,0,.6);
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:rgba(255,255,255,.35);
+}
+
+::-webkit-scrollbar-corner{
+    background:transparent;
+}
+
+*{
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.25) rgba(255,255,255,.05);
+}
+
 </style>
     
 </head>
@@ -336,23 +365,33 @@ button.loading::after{
 </header>
 
 <div class="section">
-  <div class="section-header">
-    <div class="section-header-left">
-      <h1>Materials</h1>
-      <button class="refresh-btn" id="refreshPage" title="Refresh">
-        <i class="fa fa-refresh" aria-hidden="true"></i>
-      </button>
+
+    <!-- Fixed: single section-header with left (title + refresh) and right (search) -->
+    <div class="section-header">
+        <div class="section-header-left">
+            <h1>Materials</h1>
+            <button class="refresh-btn" id="refreshPage" title="Refresh">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="section-header-right">
+            <div class="search-box" role="search" aria-label="Search materials">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search..."
+                autocomplete="off"
+                aria-label="Search materials"
+              >
+            </div>
+        </div>
     </div>
-    <div class="section-header-right">
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
-      </div>
-    </div>
-  </div>
-</div>
-<p>Below are the materials we used.</p>
-<div id="cardsContainer"></div>
+
+    <p>Below are the materials we used.</p>
+
+    <div id="cardsContainer"></div>
 </div>
 
 <script>
@@ -413,7 +452,7 @@ async function createCard(file) {
   const card = document.createElement("div");
   card.className = "card";
   card.innerHTML = `
-    <img class="logo-img" src="${file.logo}">
+    <img class="logo-img" src="${file.logo}" alt="logo">
     <div class="content">
       <div class="filename">Loading...</div>
       <button disabled>Download</button>
@@ -470,22 +509,26 @@ function handleDownload(btn, status, link) {
 files.forEach(createCard);
 
 const refreshBtn = document.getElementById("refreshPage");
-refreshBtn.onclick = () => {
-  refreshBtn.classList.add("spin");
-  setTimeout(() => location.reload(), 800);
-};
+if (refreshBtn) {
+  refreshBtn.onclick = () => {
+    refreshBtn.classList.add("spin");
+    setTimeout(() => location.reload(), 800);
+  };
+}
 
 const searchInput = document.getElementById("searchInput");
 
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.toLowerCase().trim();
-  const cards = document.querySelectorAll(".card");
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    const keyword = searchInput.value.toLowerCase().trim();
+    const cards = document.querySelectorAll(".card");
 
-  cards.forEach(card => {
-    const name = card.dataset.filename || "";
-    card.style.display = name.includes(keyword) ? "" : "none";
+    cards.forEach(card => {
+      const name = card.dataset.filename || "";
+      card.style.display = name.includes(keyword) ? "" : "none";
+    });
   });
-});
+}
 
 </script>
 
