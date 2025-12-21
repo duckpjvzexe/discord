@@ -6,36 +6,38 @@
 </head>
 <body>
 
-<h3>MediaFire Auto Download</h3>
-
-<input id="mf"
-       style="width:600px"
-       placeholder="https://www.mediafire.com/file/.../file">
-
+<h3>Auto tải MediaFire</h3>
 <button onclick="download()">Tải ngay</button>
 
 <script>
 async function download() {
-    const url = document.getElementById("mf").value.trim();
-    if (!url) return alert("Chưa nhập link");
 
-    // Proxy để vượt CORS
+    // 🔗 Link MediaFire cố định
+    const mediafireUrl =
+        "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file";
+
+    // Proxy vượt CORS
     const proxy = "https://api.allorigins.win/raw?url=";
 
     try {
-        const res = await fetch(proxy + encodeURIComponent(url));
+        const res = await fetch(proxy + encodeURIComponent(mediafireUrl));
         const html = await res.text();
 
+        // Parse HTML
         const doc = new DOMParser().parseFromString(html, "text/html");
+
+        // Lấy link tải thật
         const btn = doc.querySelector("#downloadButton");
+        if (!btn || !btn.href) {
+            alert("Không lấy được link tải");
+            return;
+        }
 
-        if (!btn) return alert("Không tìm thấy link tải");
-
-        // Redirect để tải file
+        // Tự động tải
         window.location.href = btn.href;
 
     } catch (e) {
-        alert("Lỗi tải link");
+        alert("Lỗi kết nối MediaFire");
     }
 }
 </script>
