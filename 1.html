@@ -2,42 +2,109 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MediaFire Auto Download</title>
+<style>
+    /* Reset cơ bản */
+    * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    }
+
+    .card {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 30px 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        max-width: 500px;
+        width: 100%;
+    }
+
+    button {
+        margin-top: 20px;
+        background: #ff6b6b;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        background: #ff4757;
+    }
+
+    #status {
+        margin-top: 15px;
+        font-size: 0.95rem;
+        color: #f1f1f1;
+    }
+
+    @media(max-width: 600px){
+        .card { padding: 20px; border-radius: 15px; }
+        button { width: 100%; }
+    }
+</style>
 </head>
 <body>
 
-<h3>Auto tải MediaFire</h3>
-<button onclick="download()">Tải ngay</button>
+<h1>MediaFire Auto Download</h1>
+
+<div class="card">
+    <p>File sẽ được tải ngay khi bạn bấm nút bên dưới:</p>
+    <button onclick="download()">Tải Ngay</button>
+    <p id="status"></p>
+</div>
 
 <script>
 async function download() {
+    const status = document.getElementById("status");
+    status.textContent = "Đang lấy link tải... ⏳";
 
-    // 🔗 Link MediaFire cố định
     const mediafireUrl =
         "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file";
 
-    // Proxy vượt CORS
     const proxy = "https://api.allorigins.win/raw?url=";
 
     try {
         const res = await fetch(proxy + encodeURIComponent(mediafireUrl));
         const html = await res.text();
 
-        // Parse HTML
         const doc = new DOMParser().parseFromString(html, "text/html");
-
-        // Lấy link tải thật
         const btn = doc.querySelector("#downloadButton");
+
         if (!btn || !btn.href) {
-            alert("Không lấy được link tải");
+            status.textContent = "Không lấy được link tải 😢";
             return;
         }
 
-        // Tự động tải
+        status.textContent = "Đang tải file... 🚀";
         window.location.href = btn.href;
 
     } catch (e) {
-        alert("Lỗi kết nối MediaFire");
+        status.textContent = "Lỗi kết nối MediaFire 😵";
     }
 }
 </script>
