@@ -44,6 +44,10 @@ const files = [
   {
     id: "8jbjgjhtqxo6yvk",
     logo: "https://files.catbox.moe/7aua3l.webp"
+  },
+  {
+    id: "tm2iha7smswwwlb",
+    logo: "https://files.catbox.moe/kqnx0u.png"
   }
 ];
 
