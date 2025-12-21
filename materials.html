@@ -249,99 +249,81 @@ button.loading::after{
     <div id="cardsContainer"></div>
 </div>
 
+<script src="/mediafire-fetch.js"></script>
 <script>
-const files=[
+const files = [
   {
-    url:"https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file",
-    logo:"https://files.catbox.moe/c1xa3o.ico"
+    url: "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
   },
   {
-    url:"https://www.mediafire.com/file/EXAMPLE2/file",
-    logo:"https://upload.wikimedia.org/wikipedia/commons/0/02/PDF_icon.svg"
-  },
-  {
-    url:"https://www.mediafire.com/file/EXAMPLE3/file",
-    logo:"https://upload.wikimedia.org/wikipedia/commons/8/82/Zip_icon.svg"
+    url: "https://www.mediafire.com/file/EXAMPLE2/file",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/0/02/PDF_icon.svg"
   }
 ];
 
-const proxy="https://cors.isomorphic-git.org/";
-const container=document.getElementById("cardsContainer");
+const container = document.getElementById("cardsContainer");
 
-files.forEach(file=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
+async function createCard(file) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
         <img class="logo-img" src="${file.logo}">
         <div class="content">
-            <div class="filename">Retrieving the file name...</div>
+            <div class="filename">Loading...</div>
             <button disabled>Download</button>
-            <div class="status">Gathering information...</div>
+            <div class="status">Fetching info...</div>
         </div>
     `;
     container.appendChild(card);
 
-    const nameEl=card.querySelector(".filename");
-    const btn=card.querySelector("button");
-    const status=card.querySelector(".status");
+    const nameEl = card.querySelector(".filename");
+    const btn = card.querySelector("button");
+    const status = card.querySelector(".status");
 
-    fetch(proxy+encodeURIComponent(file.url))
-        .then(r=>r.text())
-        .then(html=>{
-            const name=html.match(/var\s+optFileName\s*=\s*"([^"]+)"/);
-            nameEl.textContent=name?name[1]:"Unknown file";
+    const info = await fetchMediaFireInfo(file.url);
 
-            const doc=new DOMParser().parseFromString(html,"text/html");
-            const link=doc.querySelector("#downloadButton")?.href;
+    if (!info) {
+        nameEl.textContent = "Unknown file";
+        status.textContent = "Connection error";
+        return;
+    }
 
-            if(!link){
-                status.textContent="Unable to get the link";
-                return;
-            }
+    nameEl.textContent = info.name;
+    status.textContent = "Ready to download";
+    btn.disabled = false;
 
-            status.textContent="Ready to download";
-            btn.disabled=false;
-            btn.onclick = () => {
-                if (btn.classList.contains("loading")) return;
-            
-                btn.classList.add("loading");
-                btn.disabled = true;
-                status.textContent = "Downloading...";
-            
-                window.location.href = link;
-            
-                let countdown = 5;
-                const originalText = "Download";
-            
-                const timer = setInterval(() => {
-                    status.textContent = `Please wait ${countdown}s before downloading again`;
-                    countdown--;
-            
-                    if (countdown < 0) {
-                        clearInterval(timer);
-                        btn.classList.remove("loading");
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                        status.textContent = "Ready to download";
-                    }
-                }, 1000);
-            };
-        })
-        .catch(()=>{
-            status.textContent="Connection error";
-        });
-});
+    btn.onclick = () => handleDownload(btn, status, info.download);
+}
+
+function handleDownload(btn, status, link) {
+    if (btn.classList.contains("loading")) return;
+
+    btn.classList.add("loading");
+    btn.disabled = true;
+    window.location.href = link;
+
+    let wait = 5;
+    const timer = setInterval(() => {
+        status.textContent = `Please wait ${wait}s`;
+        wait--;
+
+        if (wait < 0) {
+            clearInterval(timer);
+            btn.classList.remove("loading");
+            btn.disabled = false;
+            status.textContent = "Ready to download";
+        }
+    }, 1000);
+}
+
+files.forEach(createCard);
 
 const refreshBtn = document.getElementById("refreshPage");
-
 refreshBtn.onclick = () => {
     refreshBtn.classList.add("spin");
-
-    setTimeout(() => {
-        location.reload();
-    }, 800);
+    setTimeout(() => location.reload(), 800);
 };
-
 </script>
 
 </body>
