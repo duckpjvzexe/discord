@@ -5,105 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MediaFire Auto Download</title>
 <style>
-    /* Reset cơ bản */
-    * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+/* Reset & font */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body {
+    min-height:100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    padding:40px 20px;
+    color:#fff;
+}
 
-    body {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        padding: 20px;
-    }
+/* Title */
+h1 {
+    font-size:2.2rem;
+    margin-bottom:30px;
+    text-align:center;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+}
 
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        text-align: center;
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
-    }
+/* Card style */
+.card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    padding:25px 30px;
+    border-radius:20px;
+    width:100%;
+    max-width:500px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.3);
+}
 
-    .card {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        padding: 30px 40px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        max-width: 500px;
-        width: 100%;
-    }
+/* File name */
+.card p.filename {
+    font-size:1.1rem;
+    font-weight:500;
+    margin-bottom:15px;
+}
 
-    button {
-        margin-top: 20px;
-        background: #ff6b6b;
-        border: none;
-        padding: 15px 30px;
-        border-radius: 50px;
-        color: white;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+/* Button */
+button {
+    background:#ff6b6b;
+    border:none;
+    padding:12px 25px;
+    border-radius:50px;
+    color:#fff;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+button:hover {
+    background:#ff4757;
+    transform: translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
 
-    button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        background: #ff4757;
-    }
+/* Status text */
+.status {
+    margin-top:10px;
+    font-size:0.95rem;
+    color:#f1f1f1;
+}
 
-    #status {
-        margin-top: 15px;
-        font-size: 0.95rem;
-        color: #f1f1f1;
-    }
-
-    @media(max-width: 600px){
-        .card { padding: 20px; border-radius: 15px; }
-        button { width: 100%; }
-    }
+/* Responsive */
+@media(max-width:600px){
+    .card { padding:20px; border-radius:15px; }
+    button { width:100%; }
+}
 </style>
 </head>
 <body>
 
 <h1>MediaFire Auto Download</h1>
 
+<!-- Card 1 -->
 <div class="card">
-    <p>File sẽ được tải ngay khi bạn bấm nút bên dưới:</p>
-    <button onclick="download()">Tải Ngay</button>
-    <p id="status"></p>
+    <p class="filename">CodexSamehwidGlobal-2.701.966.apk</p>
+    <button onclick="download('https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file', this)">Tải File</button>
+    <p class="status"></p>
+</div>
+
+<!-- Card 2 (ví dụ thêm link khác) -->
+<div class="card">
+    <p class="filename">ExampleFile-2.apk</p>
+    <button onclick="download('https://www.mediafire.com/file/EXAMPLE2/file', this)">Tải File</button>
+    <p class="status"></p>
 </div>
 
 <script>
-async function download() {
-    const status = document.getElementById("status");
+async function download(url, btn) {
+    const card = btn.closest('.card');
+    const status = card.querySelector('.status');
     status.textContent = "Đang lấy link tải... ⏳";
-
-    const mediafireUrl =
-        "https://www.mediafire.com/file/mdebs62owydlr11/CodexSamehwidGlobal-2.701.966.apk/file";
 
     const proxy = "https://api.allorigins.win/raw?url=";
 
     try {
-        const res = await fetch(proxy + encodeURIComponent(mediafireUrl));
+        const res = await fetch(proxy + encodeURIComponent(url));
         const html = await res.text();
 
         const doc = new DOMParser().parseFromString(html, "text/html");
-        const btn = doc.querySelector("#downloadButton");
+        const downloadBtn = doc.querySelector("#downloadButton");
 
-        if (!btn || !btn.href) {
+        if(!downloadBtn || !downloadBtn.href){
             status.textContent = "Không lấy được link tải 😢";
             return;
         }
 
         status.textContent = "Đang tải file... 🚀";
-        window.location.href = btn.href;
+        window.location.href = downloadBtn.href;
 
-    } catch (e) {
+    } catch (e){
         status.textContent = "Lỗi kết nối MediaFire 😵";
     }
 }
