@@ -13,7 +13,6 @@
     font-family:Inter,system-ui,sans-serif;
 }
 
-/* background */
 body{
     min-height:100vh;
     color:#eaeaea;
@@ -23,14 +22,12 @@ body{
     background-size:22px 22px;
 }
 
-/* container */
 .wrapper{
     max-width:1200px;
     margin:auto;
     padding:40px 20px;
 }
 
-/* header */
 header{
     display:flex;
     align-items:center;
@@ -55,7 +52,6 @@ nav a{
 
 nav a:hover{ color:#fff; }
 
-/* title box */
 .section{
     background:rgba(255,255,255,.03);
     border-radius:20px;
@@ -73,7 +69,6 @@ nav a:hover{ color:#fff; }
     margin-bottom:30px;
 }
 
-/* cards */
 #cardsContainer{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
@@ -96,7 +91,6 @@ nav a:hover{ color:#fff; }
     transform:translateY(-3px);
 }
 
-/* logo */
 .logo-img{
     width:64px;
     height:64px;
@@ -107,7 +101,6 @@ nav a:hover{ color:#fff; }
     flex-shrink:0;
 }
 
-/* content */
 .content{
     flex:1;
 }
@@ -119,25 +112,28 @@ nav a:hover{ color:#fff; }
     word-break:break-word;
 }
 
-/* button */
 button{
-    background:#5865f2;
+    background:#ffffff;
     border:none;
-    color:#fff;
+    color:#000000;
     padding:9px 18px;
     border-radius:999px;
     font-size:.9rem;
+    font-weight:500;
     cursor:pointer;
     transition:.2s;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);
 }
 
 button:hover:not(:disabled){
-    background:#6b77ff;
+    background:#f2f2f2;
+    transform:translateY(-1px);
 }
 
 button:disabled{
-    opacity:.5;
+    opacity:.45;
     cursor:not-allowed;
+    box-shadow:none;
 }
 
 .status{
@@ -161,18 +157,15 @@ button:disabled{
 <div class="wrapper">
 
 <header>
-    <div class="logo">☠️ mediafire.tool</div>
+    <div class="logo">DuckXKurumi - Materials</div>
     <nav>
-        <a href="#">Home</a>
-        <a href="#">Supported</a>
-        <a href="#">Terms</a>
-        <a href="#">Privacy</a>
+        <a href="https://discord.gg/ekxRybWgmh">Discord</a>
     </nav>
 </header>
 
 <div class="section">
-    <h1>Auto Download</h1>
-    <p>Danh sách file MediaFire – lấy link & tải trực tiếp.</p>
+    <h1>Materials</h1>
+    <p>Below are the materials we used.</p>
 
     <div id="cardsContainer"></div>
 </div>
@@ -204,9 +197,9 @@ files.forEach(file=>{
     card.innerHTML=`
         <img class="logo-img" src="${file.logo}">
         <div class="content">
-            <div class="filename">Đang lấy tên file...</div>
-            <button disabled>Tải file</button>
-            <div class="status">Đang lấy thông tin...</div>
+            <div class="filename">Retrieving the file name...</div>
+            <button disabled>Download</button>
+            <div class="status">Gathering information...</div>
         </div>
     `;
     container.appendChild(card);
@@ -225,19 +218,19 @@ files.forEach(file=>{
             const link=doc.querySelector("#downloadButton")?.href;
 
             if(!link){
-                status.textContent="Không lấy được link";
+                status.textContent="Unable to get the link";
                 return;
             }
 
-            status.textContent="Sẵn sàng tải";
+            status.textContent="Ready to download";
             btn.disabled=false;
             btn.onclick=()=>{
-                status.textContent="Đang tải...";
+                status.textContent="Loading...";
                 window.location.href=link;
             }
         })
         .catch(()=>{
-            status.textContent="Lỗi kết nối";
+            status.textContent="Connection error";
         });
 });
 </script>
