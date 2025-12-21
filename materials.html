@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MediaFire Auto Download</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -46,13 +46,17 @@ header{
 }
 
 nav a{
+    display:flex;
+    align-items:center;
+    gap:8px;
     color:#aaa;
-    margin-left:25px;
     text-decoration:none;
     font-size:.9rem;
 }
 
-nav a:hover{ color:#fff; }
+nav a:hover{
+    color:#fff;
+}
 
 .section{
     background:rgba(255,255,255,.03);
@@ -252,7 +256,10 @@ button.loading::after{
 <header>
     <div class="logo">DuckXKurumi - Materials</div>
     <nav>
-        <a href="https://discord.gg/ekxRybWgmh"><i class="fa-brands fa-discord"></i>Discord</a>
+      <a href="https://discord.gg/ekxRybWgmh">
+        <i class="fa-brands fa-discord"></i>
+        Discord
+      </a>
     </nav>
 </header>
 
