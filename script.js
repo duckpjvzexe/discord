@@ -2,6 +2,10 @@ const API_ENDPOINT = "/api/mediafire";
 
 const files = [
   {
+    id: "pb0u91o3jk7qpid",
+    logo: "https://files.catbox.moe/c1xa3o.ico"
+  },
+  {
     id: "0u0w9sa62hqq1oj",
     logo: "https://files.catbox.moe/c1xa3o.ico"
   },
