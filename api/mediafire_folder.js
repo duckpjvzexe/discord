@@ -1,21 +1,24 @@
 import axios from "axios";
+import * as cheerio from "cheerio";
 
-async function getDirectDownloadUrl(mediafireUrl) {
+async function getDirectFromFilePage(fileUrl) {
   try {
-    const res = await axios.get(mediafireUrl, {
+    const res = await axios.get(fileUrl, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/143.0.0.0"
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/143.0.0.0",
+        "Accept-Language": "en-US,en;q=0.9",
+        Accept: "text/html"
       },
-      maxRedirects: 0,
-      validateStatus: status => status >= 200 && status < 400
+      timeout: 15000
     });
 
-    return (
-      res.headers.location ||
-      res.request?.res?.responseUrl ||
-      null
-    );
+    const html = res.data;
+    const $ = cheerio.load(html);
+
+    const directDownloadUrl = $("#downloadButton").attr("href");
+
+    return directDownloadUrl || null;
   } catch {
     return null;
   }
@@ -34,8 +37,8 @@ export default async function handler(req, res) {
     const apiUrl = "https://www.mediafire.com/api/1.4/folder/get_content.php";
 
     let chunk = 1;
-    let allFiles = [];
     let hasMore = true;
+    let allFiles = [];
 
     while (hasMore) {
       const { data } = await axios.get(apiUrl, {
@@ -61,11 +64,11 @@ export default async function handler(req, res) {
       const folderContent = data?.response?.folder_content;
       const files = folderContent?.files || [];
 
-      const mappedFiles = await Promise.all(
+      const mapped = await Promise.all(
         files.map(async file => {
-          const mediafireFileUrl = file.links?.normal_download;
-          const directDownloadUrl = mediafireFileUrl
-            ? await getDirectDownloadUrl(mediafireFileUrl)
+          const filePageUrl = file.links?.normal_download;
+          const directDownloadUrl = filePageUrl
+            ? await getDirectFromFilePage(filePageUrl)
             : null;
 
           return {
@@ -78,7 +81,7 @@ export default async function handler(req, res) {
         })
       );
 
-      allFiles.push(...mappedFiles);
+      allFiles.push(...mapped);
 
       hasMore = folderContent?.more_chunks === "yes";
       chunk++;
