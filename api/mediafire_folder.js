@@ -1,5 +1,26 @@
 import axios from "axios";
 
+async function getDirectDownloadUrl(mediafireUrl) {
+  try {
+    const res = await axios.get(mediafireUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/143.0.0.0"
+      },
+      maxRedirects: 0,
+      validateStatus: status => status >= 200 && status < 400
+    });
+
+    return (
+      res.headers.location ||
+      res.request?.res?.responseUrl ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   try {
     const { folderKey } = req.query;
@@ -40,15 +61,24 @@ export default async function handler(req, res) {
       const folderContent = data?.response?.folder_content;
       const files = folderContent?.files || [];
 
-      allFiles.push(
-        ...files.map(file => ({
-          fileName: file.filename,
-          downloadUrl: file.links?.normal_download,
-          size: Number(file.size),
-          created: file.created_utc,
-          downloads: Number(file.downloads)
-        }))
+      const mappedFiles = await Promise.all(
+        files.map(async file => {
+          const mediafireFileUrl = file.links?.normal_download;
+          const directDownloadUrl = mediafireFileUrl
+            ? await getDirectDownloadUrl(mediafireFileUrl)
+            : null;
+
+          return {
+            fileName: file.filename,
+            directDownloadUrl,
+            size: Number(file.size),
+            created: file.created_utc,
+            downloads: Number(file.downloads)
+          };
+        })
       );
+
+      allFiles.push(...mappedFiles);
 
       hasMore = folderContent?.more_chunks === "yes";
       chunk++;
