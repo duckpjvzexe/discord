@@ -550,6 +550,11 @@ tr:hover{
     </div>
 </div>
 
+<div style="position:fixed; bottom:0; right:0; width:0; height:0; overflow:hidden;">
+    <div id="ytPlayer"></div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 
 let students = [];
@@ -709,6 +714,55 @@ document.addEventListener("keypress", function(e){
     if(e.key === "Enter") search();
 });
 
+// ===== DANH SÁCH VIDEO =====
+// Thay bằng ID video bạn muốn
+const playlist = [
+    "FDCxanzV9IU",  // lofi
+    "hjAVTnLAJSU",  // lofi 2
+    "TiMSdpNp-Vo",  // chill
+    "vkpcyY7Xe64"   // troll nhẹ 😆
+];
+
+let player;
+let musicStarted = false;
+
+// Random video
+function getRandomVideo() {
+    return playlist[Math.floor(Math.random() * playlist.length)];
+}
+
+// Khi API sẵn sàng
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player("ytPlayer", {
+        height: "0",
+        width: "0",
+        videoId: getRandomVideo(),
+        playerVars: {
+            autoplay: 0,
+            controls: 0,
+            modestbranding: 1
+        },
+        events: {
+            onStateChange: onPlayerStateChange
+        }
+    });
+}
+
+// Khi video kết thúc → random bài khác
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED) {
+        const nextVideo = getRandomVideo();
+        player.loadVideoById(nextVideo);
+    }
+}
+
+// Click bất kỳ đâu lần đầu → phát nhạc
+document.addEventListener("click", function () {
+    if (!musicStarted && player) {
+        player.playVideo();
+        musicStarted = true;
+    }
+});
 </script>
 
 </body>
