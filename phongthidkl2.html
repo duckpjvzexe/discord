@@ -21,17 +21,18 @@ body{
     min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start; /* sửa */
+    padding:20px 15px;      /* thêm */
     background: radial-gradient(circle at 20% 30%, #667eea, transparent 40%),
                 radial-gradient(circle at 80% 70%, #764ba2, transparent 40%),
                 #0f172a;
-    overflow:hidden;
+    overflow-y:auto;        /* sửa */
 }
 
 .container{
     width:100%;
     max-width:900px;
-    padding:50px;
+    padding:40px;
     border-radius:30px;
     background:rgba(255,255,255,0.08);
     backdrop-filter:blur(30px);
@@ -43,21 +44,23 @@ body{
 
 h1{
     text-align:center;
-    font-size:30px;
-    margin-bottom:35px;
+    font-size:28px;
+    margin-bottom:30px;
     font-weight:700;
-    letter-spacing:1px;
 }
 
 .search-box{
     display:flex;
     justify-content:center;
     gap:15px;
-    margin-bottom:35px;
+    margin-bottom:30px;
+    flex-wrap:wrap; /* thêm */
 }
 
 .input-wrapper{
     position:relative;
+    width:100%;
+    max-width:300px;
 }
 
 .input-wrapper i{
@@ -70,7 +73,7 @@ h1{
 
 input{
     padding:14px 14px 14px 40px;
-    width:260px;
+    width:100%;
     border-radius:14px;
     border:none;
     outline:none;
@@ -80,18 +83,14 @@ input{
     transition:0.3s;
 }
 
-input::placeholder{
-    color:rgba(255,255,255,0.6);
-}
-
 input:focus{
     background:rgba(255,255,255,0.2);
-    box-shadow:0 0 20px #8b5cf6;
-    transform:scale(1.05);
+    box-shadow:0 0 15px #8b5cf6;
+    transform:none; /* bỏ scale gây vỡ layout */
 }
 
 button{
-    padding:14px 28px;
+    padding:14px 20px;
     border-radius:14px;
     border:none;
     font-weight:600;
@@ -100,13 +99,11 @@ button{
     color:white;
     font-size:15px;
     transition:0.3s;
-    position:relative;
-    overflow:hidden;
+    white-space:nowrap;
 }
 
 button:hover{
-    transform:translateY(-3px);
-    box-shadow:0 15px 30px rgba(139,92,246,0.5);
+    transform:translateY(-2px);
 }
 
 .student-card{
@@ -114,50 +111,40 @@ button:hover{
     background:rgba(255,255,255,0.95);
     color:#1e293b;
     border-radius:25px;
-    padding:30px;
+    padding:25px;
     animation:fadeUp 0.6s ease;
     box-shadow:0 25px 60px rgba(0,0,0,0.4);
 }
 
-.student-card h2{
-    color:#7c3aed;
-    margin-bottom:8px;
-    font-weight:700;
-}
-
-.student-card p{
-    margin-bottom:20px;
-    font-weight:500;
-    color:#475569;
-}
-
+/* Table responsive */
 table{
     width:100%;
     border-collapse:collapse;
     border-radius:15px;
     overflow:hidden;
+    min-width:500px; /* giữ layout */
+}
+
+.table-wrapper{
+    overflow-x:auto;
+    width:100%;
 }
 
 th{
     background:linear-gradient(135deg,#8b5cf6,#6366f1);
     color:white;
-    padding:14px;
+    padding:12px;
     font-size:14px;
 }
 
 td{
-    padding:14px;
+    padding:12px;
     text-align:center;
     font-weight:500;
 }
 
 tr:nth-child(even){
     background:#f1f5f9;
-}
-
-tr:hover{
-    background:#e0e7ff;
-    transition:0.3s;
 }
 
 .message{
@@ -167,34 +154,34 @@ tr:hover{
     color:#facc15;
 }
 
-@keyframes fadeUp{
-    from{opacity:0; transform:translateY(30px);}
-    to{opacity:1; transform:translateY(0);}
-}
-
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
-}
-
+/* Mobile */
 @media(max-width:600px){
-    .container{
-        padding:30px;
+
+    body{
+        padding:15px 10px;
     }
+
+    .container{
+        padding:25px 20px;
+        border-radius:20px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
     .search-box{
         flex-direction:column;
-        align-items:center;
+        align-items:stretch;
     }
-    input{
+
+    button{
         width:100%;
     }
-}
-.reset-btn{
-    background:linear-gradient(135deg,#ef4444,#f97316);
-}
 
-.reset-btn:hover{
-    box-shadow:0 15px 30px rgba(239,68,68,0.5);
+    .student-card{
+        padding:20px;
+    }
 }
 </style>
 </head>
@@ -302,10 +289,11 @@ function search(){
     const student=results[0];
 
     let html=`
-        <div class="student-card">
-            <h2>${student.name}</h2>
-            <p><strong>Lớp:</strong> ${student.lop} | <strong>SBD:</strong> ${student.sbd}</p>
-
+    <div class="student-card">
+        <h2>${student.name}</h2>
+        <p><strong>Lớp:</strong> ${student.lop} | <strong>SBD:</strong> ${student.sbd}</p>
+    
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
@@ -329,7 +317,7 @@ function search(){
         `;
     });
 
-    html+=`</tbody></table></div>`;
+    html+=`</tbody></table></div></div>`;
     resultArea.innerHTML=html;
 }
 
