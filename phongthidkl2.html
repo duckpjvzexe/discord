@@ -2,19 +2,17 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Tra cứu phòng thi DK (THPT VY1)</title>
+<title>Tra cứu phòng thi</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Inter', sans-serif;
+    font-family:'Poppins', sans-serif;
 }
 
 body{
@@ -22,100 +20,96 @@ body{
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    padding:20px 15px;
-    background: radial-gradient(circle at 20% 30%, #667eea, transparent 40%),
-                radial-gradient(circle at 80% 70%, #764ba2, transparent 40%),
-                #0f172a;
+    padding:20px;
+    background: linear-gradient(-45deg,#1e3c72,#2a5298,#6a11cb,#2575fc);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
     overflow-y:auto;
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
 }
 
 .container{
     width:100%;
-    max-width:900px;
+    max-width:850px;
     padding:40px;
-    border-radius:30px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(30px);
-    border:1px solid rgba(255,255,255,0.1);
-    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+    border-radius:25px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
     color:white;
-    animation: fadeIn 0.8s ease;
+    animation:fadeIn 0.8s ease;
 }
 
 h1{
     text-align:center;
     font-size:28px;
     margin-bottom:30px;
-    font-weight:700;
 }
 
 .search-box{
     display:flex;
     justify-content:center;
     gap:15px;
-    margin-bottom:30px;
+    margin-bottom:25px;
     flex-wrap:wrap;
 }
 
-.input-wrapper{
-    position:relative;
-    width:100%;
-    max-width:300px;
-}
-
-.input-wrapper i{
-    position:absolute;
-    left:15px;
-    top:50%;
-    transform:translateY(-50%);
-    opacity:0.6;
-}
-
 input{
-    padding:14px 14px 14px 40px;
-    width:100%;
-    border-radius:14px;
+    padding:14px;
+    width:260px;
+    border-radius:12px;
     border:none;
     outline:none;
     font-size:16px;
-    background:rgba(255,255,255,0.1);
-    color:white;
     transition:0.3s;
 }
 
 input:focus{
-    background:rgba(255,255,255,0.2);
-    box-shadow:0 0 15px #8b5cf6;
+    box-shadow:0 0 15px #00f2ff;
+    transform:none;
 }
 
 button{
-    padding:14px 20px;
-    border-radius:14px;
+    padding:14px 25px;
+    border-radius:12px;
     border:none;
-    font-weight:600;
+    font-weight:bold;
     cursor:pointer;
-    background:linear-gradient(135deg,#8b5cf6,#6366f1);
+    background:linear-gradient(45deg,#ff512f,#dd2476);
     color:white;
-    font-size:15px;
     transition:0.3s;
 }
 
 button:hover{
-    transform:translateY(-2px);
+    transform:translateY(-3px);
+    box-shadow:0 0 20px #ff4b2b;
 }
 
-.reset-btn{
-    background:linear-gradient(135deg,#ef4444,#f97316);
+.loading{
+    text-align:center;
+    margin-bottom:15px;
+    font-weight:bold;
+    color:#00f2ff;
+    animation:pulse 1.5s infinite;
 }
 
 .student-card{
-    margin-top:20px;
-    background:rgba(255,255,255,0.95);
-    color:#1e293b;
-    border-radius:25px;
+    background:white;
+    color:#333;
+    border-radius:20px;
     padding:25px;
     animation:fadeUp 0.5s ease;
-    box-shadow:0 25px 60px rgba(0,0,0,0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+.student-card h2{
+    color:#6a11cb;
+    margin-bottom:10px;
 }
 
 .table-wrapper{
@@ -125,37 +119,30 @@ button:hover{
 table{
     width:100%;
     border-collapse:collapse;
+    margin-top:15px;
     min-width:500px;
 }
 
 th{
-    background:linear-gradient(135deg,#8b5cf6,#6366f1);
+    background:#6a11cb;
     color:white;
-    padding:12px;
+    padding:10px;
 }
 
 td{
-    padding:12px;
+    padding:10px;
     text-align:center;
 }
 
 tr:nth-child(even){
-    background:#f1f5f9;
+    background:#f4f4f4;
 }
 
 .message{
     text-align:center;
     margin-top:15px;
-    font-weight:600;
-    color:#facc15;
-}
-
-.loading{
-    text-align:center;
-    margin-top:15px;
-    font-weight:600;
-    color:#93c5fd;
-    animation:pulse 1.5s infinite;
+    font-weight:bold;
+    color:#ffd700;
 }
 
 @keyframes fadeUp{
@@ -174,10 +161,9 @@ tr:nth-child(even){
 }
 
 @media(max-width:600px){
-    .container{padding:25px 20px;}
-    h1{font-size:22px;}
+    .container{padding:25px;}
     .search-box{flex-direction:column;}
-    button{width:100%;}
+    input,button{width:100%;}
 }
 </style>
 </head>
@@ -185,15 +171,11 @@ tr:nth-child(even){
 <body>
 
 <div class="container">
-    <h1>🎓 TRA CỨU PHÒNG THI DK - Lần 2</h1>
+    <h1>🎓 TRA CỨU PHÒNG THI</h1>
 
     <div class="search-box">
-        <div class="input-wrapper">
-            <i>🔎</i>
-            <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8">
-        </div>
+        <input type="text" id="searchInput" placeholder="Nhập SBD..." maxlength="8">
         <button onclick="search()">Tìm kiếm</button>
-        <button class="reset-btn" onclick="resetSearch()">Tìm lại</button>
     </div>
 
     <div id="loading" class="loading">⏳ Đang tải dữ liệu...</div>
@@ -253,7 +235,7 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(async pdf => {
 
                     let name=rawName
                         .split(" ")
-                        .filter((w,i,a)=>w!==a[i-1])
+                        .filter((w,i,a)=>w!==a[i-1]) /* fix lặp tên */
                         .join(" ");
 
                     students.push({
@@ -268,7 +250,7 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(async pdf => {
         });
     }
 
-    isLoaded = true;
+    isLoaded=true;
     document.getElementById("loading").style.display="none";
 });
 
@@ -301,41 +283,36 @@ function search(){
     const student=results[0];
 
     let html=`
-    <div class="student-card">
-        <h2>${student.name}</h2>
-        <p><strong>Lớp:</strong> ${student.lop} | <strong>SBD:</strong> ${student.sbd}</p>
-        <div class="table-wrapper">
-        <table>
-        <thead>
-            <tr>
-                <th>Môn</th>
-                <th>Phòng</th>
-                <th>Ca</th>
-                <th>Ngày</th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="student-card">
+            <h2>${student.name}</h2>
+            <p><strong>Lớp:</strong> ${student.lop} | <strong>SBD:</strong> ${student.sbd}</p>
+
+            <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Môn</th>
+                        <th>Phòng</th>
+                        <th>Ca</th>
+                        <th>Ngày</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
 
     results.forEach(s=>{
         html+=`
-        <tr>
-            <td>${s.mon}</td>
-            <td>${s.phong}</td>
-            <td>${s.ca}</td>
-            <td>${s.ngay}</td>
-        </tr>
+            <tr>
+                <td>${s.mon}</td>
+                <td>${s.phong}</td>
+                <td>${s.ca}</td>
+                <td>${s.ngay}</td>
+            </tr>
         `;
     });
 
     html+=`</tbody></table></div></div>`;
     resultArea.innerHTML=html;
-}
-
-function resetSearch(){
-    document.getElementById("searchInput").value="";
-    document.getElementById("resultArea").innerHTML="";
-    document.getElementById("message").innerHTML="";
 }
 
 document.getElementById("searchInput")
