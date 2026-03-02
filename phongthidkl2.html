@@ -472,24 +472,22 @@ tr:hover{
 .close-btn{
     background:transparent;
     border:none;
-    width:26px;
-    height:26px;
     display:flex;
     align-items:center;
-    justify-content:center;
+    gap:4px;
     cursor:pointer;
-    opacity:0.7;
-    transition:0.2s;
-}
-
-.close-btn:hover{
-    opacity:1;
-    transform:scale(1.1);
+    font-size:12px;
+    opacity:0.8;
 }
 
 .close-btn svg{
     width:14px;
     height:14px;
+}
+
+.close-btn:hover{
+    opacity:1;
+    transform:scale(1.1);
 }
 </style>
 </head>
@@ -628,10 +626,13 @@ tr:hover{
     <div class="music-header">
         <span>Nhạc nền</span>
         <button class="close-btn" onclick="togglePlayer()" title="Đóng">
-            <!-- Close SVG -->
             <svg viewBox="0 0 24 24">
-                <path d="M6 6L18 18M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <path d="M6 6L18 18M6 18L18 6"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"/>
             </svg>
+            <span>Đóng</span>
         </button>
     </div>
 
