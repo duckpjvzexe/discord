@@ -423,11 +423,11 @@ tr:hover{
     position:fixed;
     bottom:20px;
     right:20px;
-    width:260px;
+    width:230px;
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(20px);
-    border-radius:20px;
-    padding:15px;
+    border-radius:18px;
+    padding:14px;
     color:white;
     box-shadow:0 20px 40px rgba(0,0,0,0.4);
     z-index:9999;
@@ -437,38 +437,37 @@ tr:hover{
 .music-header{
     display:flex;
     justify-content:space-between;
+    align-items:center;
     font-weight:600;
     margin-bottom:8px;
 }
 
-.music-header span{
-    cursor:pointer;
-}
-
 .music-info{
     font-size:12px;
-    margin-bottom:10px;
+    margin-bottom:12px;
     opacity:0.8;
 }
 
 .music-controls{
     display:flex;
-    gap:10px;
-    margin-bottom:8px;
+    gap:12px;
 }
 
-.music-controls button{
+.icon-btn{
     flex:1;
-    padding:6px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
     background:linear-gradient(135deg,#8b5cf6,#6366f1);
-    color:white;
+    border:none;
+    border-radius:12px;
+    padding:8px;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-.music-player input[type="range"]{
-    width:100%;
+.icon-btn svg{
+    width:18px;
+    height:18px;
 }
 </style>
 </head>
@@ -605,23 +604,35 @@ tr:hover{
 <!-- MUSIC POPUP -->
 <div class="music-player" id="musicPlayer">
     <div class="music-header">
-        🎵 Nhạc nền
-        <span onclick="togglePlayer()">✖</span>
+        <span>Nhạc nền</span>
+        <button class="icon-btn" onclick="togglePlayer()" title="Đóng">
+            <!-- Close SVG -->
+            <svg viewBox="0 0 24 24">
+                <path d="M6 6L18 18M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
     </div>
 
     <div class="music-info" id="musicTitle">Chưa phát</div>
 
     <div class="music-controls">
-        <button onclick="togglePlay()">▶️</button>
-        <button onclick="nextSong()">⏭</button>
-    </div>
+        <button class="icon-btn" onclick="togglePlay()" id="playBtn" title="Phát / Tạm dừng">
+            <!-- Play SVG -->
+            <svg id="playIcon" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" fill="white"/>
+            </svg>
+        </button>
 
-    <input type="range" min="0" max="100" value="50" 
-           onchange="changeVolume(this.value)">
+        <button class="icon-btn" onclick="nextSong()" title="Bài tiếp theo">
+            <!-- Next SVG -->
+            <svg viewBox="0 0 24 24">
+                <path d="M5 5v14l8-7-8-7zm9 0h3v14h-3z" fill="white"/>
+            </svg>
+        </button>
+    </div>
 </div>
 
 <div id="ytPlayer"></div>
-
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 
@@ -794,6 +805,7 @@ let player;
 let currentIndex = Math.floor(Math.random() * songs.length);
 let started = false;
 let isPlaying = false;
+let switching = false;
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player("ytPlayer", {
@@ -817,19 +829,21 @@ function onYouTubeIframeAPIReady() {
         songs[currentIndex].title;
 }
 
-// Click lần đầu vào trang → phát nhạc
+// Click lần đầu → đợi 3s rồi phát
 document.addEventListener("click", function () {
     if (!started && player) {
-        player.playVideo();
-        player.setVolume(50);
         started = true;
-        isPlaying = true;
+        setTimeout(() => {
+            player.playVideo();
+            isPlaying = true;
+            updateIcon();
+        }, 3000);
     }
 });
 
 // Play / Pause
 function togglePlay() {
-    if (!player) return;
+    if (!player || switching) return;
 
     if (isPlaying) {
         player.pauseVideo();
@@ -838,26 +852,51 @@ function togglePlay() {
         player.playVideo();
         isPlaying = true;
     }
+
+    updateIcon();
 }
 
-// Bài tiếp theo (random)
+// Next bài (đợi 3s trước khi phát)
 function nextSong() {
+    if (!player || switching) return;
+
+    switching = true;
+    player.stopVideo();
+
     currentIndex = Math.floor(Math.random() * songs.length);
-    player.loadVideoById(songs[currentIndex].id);
+
     document.getElementById("musicTitle").innerText =
         songs[currentIndex].title;
-    isPlaying = true;
+
+    setTimeout(() => {
+        player.loadVideoById(songs[currentIndex].id);
+        player.playVideo();
+        isPlaying = true;
+        switching = false;
+        updateIcon();
+    }, 3000);
 }
 
-// Volume
-function changeVolume(val) {
-    if (player) player.setVolume(val);
+// Đổi icon Play / Pause
+function updateIcon(){
+    const btn = document.getElementById("playBtn");
+
+    if(isPlaying){
+        btn.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="white"/>
+        </svg>`;
+    } else {
+        btn.innerHTML = `
+        <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" fill="white"/>
+        </svg>`;
+    }
 }
 
 // Ẩn player
 function togglePlayer() {
-    const box = document.getElementById("musicPlayer");
-    box.style.display = "none";
+    document.getElementById("musicPlayer").style.display = "none";
 }
 </script>
 
