@@ -883,11 +883,17 @@ function togglePlay() {
     updateIcon();
 }
 
-// Next bài (đợi 3s trước khi phát)
-function nextSong() {
-    if (!player || switching) return;
+let nextTimeout = null;
 
-    switching = true;
+function nextSong() {
+    if (!player) return;
+
+    // Nếu đang chờ chuyển bài → hủy lần trước
+    if (nextTimeout) {
+        clearTimeout(nextTimeout);
+        nextTimeout = null;
+    }
+
     player.stopVideo();
 
     currentIndex = Math.floor(Math.random() * songs.length);
@@ -895,12 +901,12 @@ function nextSong() {
     document.getElementById("musicTitle").innerText =
         songs[currentIndex].title;
 
-    setTimeout(() => {
+    nextTimeout = setTimeout(() => {
         player.loadVideoById(songs[currentIndex].id);
         player.playVideo();
         isPlaying = true;
-        switching = false;
         updateIcon();
+        nextTimeout = null;
     }, 3000);
 }
 
