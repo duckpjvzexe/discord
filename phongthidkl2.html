@@ -252,20 +252,30 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
                         }
 
                         if(/^\d{8}/.test(line.trim())){
-                            let parts=line.trim().split(/\s+/);
-                            let sbd=parts[0];
-                            let lopIndex=parts.findIndex(p=>/^[0-9]{2}A[0-9]+$/.test(p));
-
-                            if(lopIndex!==-1){
-                                let lop=parts[lopIndex];
-                                let name=parts.slice(1,lopIndex).join(" ");
-
+                            let cleanLine = line.replace(/\u00A0/g, " ").replace(/\s+/g, " ").trim();
+                            let parts = cleanLine.split(" ");
+                        
+                            let sbd = parts[0];
+                        
+                            let lopIndex = parts.findIndex(p => /^[0-9]{2}A[0-9]+$/.test(p));
+                        
+                            if(lopIndex !== -1){
+                                let lop = parts[lopIndex];
+                        
+                                let name = parts
+                                    .slice(1, lopIndex)
+                                    .join(" ")
+                                    .replace(/\s+/g, " ")
+                                    .trim();
+                        
                                 students.push({
-                                    sbd,name,lop,
-                                    mon:currentSubject,
-                                    phong:currentRoom,
-                                    ca:currentSession,
-                                    ngay:currentDate
+                                    sbd,
+                                    name,
+                                    lop,
+                                    mon: currentSubject,
+                                    phong: currentRoom,
+                                    ca: currentSession,
+                                    ngay: currentDate
                                 });
                             }
                         }
