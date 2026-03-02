@@ -263,7 +263,7 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
                                 let lop = parts[lopIndex];
                         
                                 let name = parts
-                                    .slice(1, lopIndex)
+                                    .slice(1, lopIndex - 1)
                                     .join(" ")
                                     .replace(/\s+/g, " ")
                                     .trim();
