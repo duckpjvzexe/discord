@@ -388,13 +388,8 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
                             let dateMatch=line.match(/ngày\s*(\d+\/\d+\/\d+)/);
                             if(dateMatch) currentDate=dateMatch[1];
 
-                            let sessionMatch = line.match(/ca\s*(\d+)\s*(sáng|chiều)/i);
-
-                            if(sessionMatch){
-                                let caNumber = sessionMatch[1];
-                                let timeOfDay = sessionMatch[2];
-                                currentSession = `Ca ${caNumber} ${timeOfDay}`;
-                            }
+                            if(line.toLowerCase().includes("chiều")) currentSession="Chiều";
+                            if(line.toLowerCase().includes("sáng")) currentSession="Sáng";
                         }
 
                         if(/^\d{8}/.test(line.trim())){
