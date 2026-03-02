@@ -418,6 +418,58 @@ tr:hover{
     background:white;
     padding:10px;
 }
+
+.music-player{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:260px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    border-radius:20px;
+    padding:15px;
+    color:white;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    z-index:9999;
+    font-size:13px;
+}
+
+.music-header{
+    display:flex;
+    justify-content:space-between;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.music-header span{
+    cursor:pointer;
+}
+
+.music-info{
+    font-size:12px;
+    margin-bottom:10px;
+    opacity:0.8;
+}
+
+.music-controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.music-controls button{
+    flex:1;
+    padding:6px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#8b5cf6,#6366f1);
+    color:white;
+}
+
+.music-player input[type="range"]{
+    width:100%;
+}
 </style>
 </head>
 
@@ -550,9 +602,25 @@ tr:hover{
     </div>
 </div>
 
-<div style="position:fixed; bottom:0; right:0; width:0; height:0; overflow:hidden;">
-    <div id="ytPlayer"></div>
+<!-- MUSIC POPUP -->
+<div class="music-player" id="musicPlayer">
+    <div class="music-header">
+        🎵 Nhạc nền
+        <span onclick="togglePlayer()">✖</span>
+    </div>
+
+    <div class="music-info" id="musicTitle">Chưa phát</div>
+
+    <div class="music-controls">
+        <button onclick="togglePlay()">▶️</button>
+        <button onclick="nextSong()">⏭</button>
+    </div>
+
+    <input type="range" min="0" max="100" value="50" 
+           onchange="changeVolume(this.value)">
 </div>
+
+<div id="ytPlayer"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -714,55 +782,83 @@ document.addEventListener("keypress", function(e){
     if(e.key === "Enter") search();
 });
 
-// ===== DANH SÁCH VIDEO =====
-// Thay bằng ID video bạn muốn
-const playlist = [
-    "FDCxanzV9IU",  // lofi
-    "hjAVTnLAJSU",  // lofi 2
-    "TiMSdpNp-Vo",  // chill
-    "vkpcyY7Xe64"   // troll nhẹ 😆
+// ===== DANH SÁCH BÀI =====
+const songs = [
+    { id: "FDCxanzV9IU", title: "China Pipa" },
+    { id: "hjAVTnLAJSU", title: "Đảo Nghịch" },
+    { id: "TiMSdpNp-Vo", title: "Hẹn Hò Nhưng Không Yêu" },
+    { id: "vkpcyY7Xe64", title: "Mưa Đợi Chờ" }
 ];
 
 let player;
-let musicStarted = false;
+let currentIndex = Math.floor(Math.random() * songs.length);
+let started = false;
+let isPlaying = false;
 
-// Random video
-function getRandomVideo() {
-    return playlist[Math.floor(Math.random() * playlist.length)];
-}
-
-// Khi API sẵn sàng
 function onYouTubeIframeAPIReady() {
     player = new YT.Player("ytPlayer", {
         height: "0",
         width: "0",
-        videoId: getRandomVideo(),
+        videoId: songs[currentIndex].id,
         playerVars: {
-            autoplay: 0,
             controls: 0,
             modestbranding: 1
         },
         events: {
-            onStateChange: onPlayerStateChange
+            onStateChange: function (event) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    nextSong();
+                }
+            }
         }
     });
+
+    document.getElementById("musicTitle").innerText =
+        songs[currentIndex].title;
 }
 
-// Khi video kết thúc → random bài khác
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        const nextVideo = getRandomVideo();
-        player.loadVideoById(nextVideo);
-    }
-}
-
-// Click bất kỳ đâu lần đầu → phát nhạc
+// Click lần đầu vào trang → phát nhạc
 document.addEventListener("click", function () {
-    if (!musicStarted && player) {
+    if (!started && player) {
         player.playVideo();
-        musicStarted = true;
+        player.setVolume(50);
+        started = true;
+        isPlaying = true;
     }
 });
+
+// Play / Pause
+function togglePlay() {
+    if (!player) return;
+
+    if (isPlaying) {
+        player.pauseVideo();
+        isPlaying = false;
+    } else {
+        player.playVideo();
+        isPlaying = true;
+    }
+}
+
+// Bài tiếp theo (random)
+function nextSong() {
+    currentIndex = Math.floor(Math.random() * songs.length);
+    player.loadVideoById(songs[currentIndex].id);
+    document.getElementById("musicTitle").innerText =
+        songs[currentIndex].title;
+    isPlaying = true;
+}
+
+// Volume
+function changeVolume(val) {
+    if (player) player.setVolume(val);
+}
+
+// Ẩn player
+function togglePlayer() {
+    const box = document.getElementById("musicPlayer");
+    box.style.display = "none";
+}
 </script>
 
 </body>
