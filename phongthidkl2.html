@@ -324,6 +324,63 @@ tr:hover{
         padding: 8px 4px;
     }
 }
+
+.guide-box{
+    background:rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:30px;
+    font-size:14px;
+    line-height:1.6;
+}
+
+.guide-box h3{
+    margin-bottom:10px;
+    color:#facc15;
+}
+
+.guide-box ul{
+    padding-left:18px;
+}
+
+.guide-box li{
+    margin-bottom:6px;
+}
+
+.schedule-box{
+    margin-bottom:40px;
+    background:rgba(255,255,255,0.1);
+    padding:25px;
+    border-radius:25px;
+}
+
+.schedule-box h3{
+    margin-bottom:20px;
+    color:#facc15;
+    text-align:center;
+}
+
+.schedule-box h4{
+    margin:20px 0 10px 0;
+    color:#38bdf8;
+    font-size:15px;
+}
+
+.schedule-box table{
+    width:100%;
+    margin-bottom:15px;
+    background:white;
+    color:#1e293b;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.schedule-box td,
+.schedule-box th{
+    padding:10px;
+    text-align:center;
+    font-size:13px;
+}
 </style>
 </head>
 
@@ -331,6 +388,16 @@ tr:hover{
 
 <div class="container">
     <h1>🎓 TRA CỨU PHÒNG THI DK - Lần 2</h1>
+
+    <div class="guide-box">
+        <h3>📌 HƯỚNG DẪN TRA CỨU</h3>
+        <ul>
+            <li>Nhập <strong>Số báo danh (8 số)</strong> để tìm nhanh nhất.</li>
+            <li>Nếu không nhớ SBD, nhập <strong>Họ và tên + Lớp</strong>.</li>
+            <li>Không cần nhập đủ dấu tiếng Việt.</li>
+            <li>Kiểm tra kỹ lớp (VD: 12A3).</li>
+        </ul>
+    </div>
 
     <div class="search-box">
 
@@ -355,6 +422,79 @@ tr:hover{
 
     <div id="resultArea"></div>
     <div id="message" class="message"></div>
+
+    <div class="schedule-box">
+        <h3>📅 LỊCH KIỂM TRA ĐỊNH KỲ LẦN 2 (2025–2026)</h3>
+    
+        <h4>🗓 Thứ Bảy - 14/03/2026 (Chiều)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Môn</th>
+                    <th>Thời gian</th>
+                    <th>Gọi vào phòng</th>
+                    <th>Tính giờ làm bài</th>
+                    <th>Thu bài</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Hóa 10,11 - Sử 11</td>
+                    <td>50 phút</td>
+                    <td>13:25</td>
+                    <td>13:35</td>
+                    <td>14:25</td>
+                </tr>
+                <tr>
+                    <td>Sinh 10,11 - Địa 11</td>
+                    <td>50 phút</td>
+                    <td>14:45</td>
+                    <td>14:55</td>
+                    <td>15:45</td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <h4>🗓 Chủ Nhật - 15/03/2026 (Sáng)</h4>
+        <table>
+            <tbody>
+                <tr>
+                    <td>Lý 10,11</td>
+                    <td>50 phút</td>
+                    <td>7:25</td>
+                    <td>7:35</td>
+                    <td>8:25</td>
+                </tr>
+                <tr>
+                    <td>Văn 10,11</td>
+                    <td>90 phút</td>
+                    <td>8:45</td>
+                    <td>8:55</td>
+                    <td>10:25</td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <h4>🗓 Chủ Nhật - 15/03/2026 (Chiều)</h4>
+        <table>
+            <tbody>
+                <tr>
+                    <td>Toán 10,11</td>
+                    <td>90 phút</td>
+                    <td>13:25</td>
+                    <td>13:35</td>
+                    <td>15:05</td>
+                </tr>
+                <tr>
+                    <td>Anh 10,11</td>
+                    <td>50 phút</td>
+                    <td>15:25</td>
+                    <td>15:35</td>
+                    <td>16:25</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -507,7 +647,7 @@ function search(){
 }
 
 // Allow Enter key to search
-document.getElementById("searchInput").addEventListener("keypress", function(e){
+document.addEventListener("keypress", function(e){
     if(e.key === "Enter") search();
 });
 
