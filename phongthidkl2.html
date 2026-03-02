@@ -333,12 +333,25 @@ tr:hover{
     <h1>🎓 TRA CỨU PHÒNG THI DK - Lần 2</h1>
 
     <div class="search-box">
+
         <div class="input-wrapper">
-            <i>🔎</i>
-            <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8" inputmode="numeric">
+            <i>🆔</i>
+            <input type="text" id="sbdInput" placeholder="Nhập số báo danh (8 số)">
         </div>
+    
+        <div class="input-wrapper">
+            <i>👤</i>
+            <input type="text" id="nameInput" placeholder="Nhập họ và tên">
+        </div>
+    
+        <div class="input-wrapper">
+            <i>🏫</i>
+            <input type="text" id="classInput" placeholder="Nhập lớp (VD: 12A3)">
+        </div>
+    
         <button onclick="search()">Tìm kiếm</button>
         <button class="reset-btn" onclick="refreshPage()">Tìm lại</button>
+    
     </div>
 
     <div id="resultArea"></div>
@@ -375,8 +388,13 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
                             let dateMatch=line.match(/ngày\s*(\d+\/\d+\/\d+)/);
                             if(dateMatch) currentDate=dateMatch[1];
 
-                            if(line.toLowerCase().includes("chiều")) currentSession="Chiều";
-                            if(line.toLowerCase().includes("sáng")) currentSession="Sáng";
+                            let sessionMatch = line.match(/ca\s*(\d+)\s*(sáng|chiều)/i);
+
+                            if(sessionMatch){
+                                let caNumber = sessionMatch[1];
+                                let timeOfDay = sessionMatch[2];
+                                currentSession = `Ca ${caNumber} ${timeOfDay}`;
+                            }
                         }
 
                         if(/^\d{8}/.test(line.trim())){
@@ -418,22 +436,45 @@ pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
 
 function search(){
 
-    const keyword=document.getElementById("searchInput").value.trim();
+    const sbd = document.getElementById("sbdInput").value.trim();
+    const name = document.getElementById("nameInput").value.trim().toLowerCase();
+    const lop = document.getElementById("classInput").value.trim().toLowerCase();
+
     const resultArea=document.getElementById("resultArea");
     const message=document.getElementById("message");
 
     resultArea.innerHTML="";
     message.innerHTML="";
 
-    if(!/^\d{8}$/.test(keyword)){
-        message.innerHTML="⚠ Vui lòng nhập đúng 8 chữ số!";
-        return;
+    let results=[];
+
+    // Nếu nhập SBD → ưu tiên tìm theo SBD
+    if(sbd !== ""){
+
+        if(!/^\d{8}$/.test(sbd)){
+            message.innerHTML="⚠ SBD phải gồm 8 chữ số!";
+            return;
+        }
+
+        results = students.filter(s => s.sbd === sbd);
     }
 
-    const results=students.filter(s=>s.sbd===keyword);
+    // Nếu không nhập SBD → bắt buộc nhập TÊN + LỚP
+    else{
+
+        if(name === "" || lop === ""){
+            message.innerHTML="⚠ Khi tìm theo họ tên, phải nhập thêm lớp!";
+            return;
+        }
+
+        results = students.filter(s =>
+            s.name.toLowerCase().includes(name) &&
+            s.lop.toLowerCase() === lop
+        );
+    }
 
     if(results.length===0){
-        message.innerHTML="❌ Không tìm thấy SBD!";
+        message.innerHTML="❌ Không tìm thấy thông tin!";
         return;
     }
 
