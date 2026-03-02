@@ -381,6 +381,43 @@ tr:hover{
     text-align:center;
     font-size:13px;
 }
+
+.footer-box{
+    margin-top:40px;
+    text-align:center;
+}
+
+.powered{
+    margin-bottom:15px;
+    font-size:13px;
+    opacity:0.8;
+}
+
+.donate-btn{
+    background:linear-gradient(135deg,#ec4899,#f43f5e);
+}
+
+.donate-btn:hover{
+    box-shadow:0 15px 30px rgba(236,72,153,0.5);
+}
+
+.donate-box{
+    margin-top:20px;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.1);
+    display:none;
+    animation:fadeUp 0.4s ease;
+}
+
+.donate-box img{
+    width:200px;
+    max-width:100%;
+    margin:15px 0;
+    border-radius:15px;
+    background:white;
+    padding:10px;
+}
 </style>
 </head>
 
@@ -494,6 +531,24 @@ tr:hover{
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<div class="footer-box">
+    <p class="powered">
+        Powered by <strong>Vy1 Dev Team</strong> 🚀
+    </p>
+
+    <button class="donate-btn" onclick="toggleDonate()">
+        💖 Donate ủng hộ
+    </button>
+
+    <div class="donate-box" id="donateBox">
+        <h4>Quét mã QR để ủng hộ ☕</h4>
+        <img src="https://qr.sepay.vn/img?bank=MBBank&acc=0832771047&template=&amount=&des=donate" alt="QR Donate">
+        <p>Ngân hàng: MBBank</p>
+        <p>Chủ TK: HOANG ANH VIET</p>
+        <p>STK: 0832771047</p>
     </div>
 </div>
 
@@ -646,6 +701,11 @@ function search(){
     resultArea.innerHTML=html;
 }
 
+function toggleDonate(){
+    const box = document.getElementById("donateBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+    
 // Allow Enter key to search
 document.addEventListener("keypress", function(e){
     if(e.key === "Enter") search();
