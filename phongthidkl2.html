@@ -350,7 +350,6 @@ tr:hover{
         </div>
     
         <button onclick="search()">Tìm kiếm</button>
-        <button class="reset-btn" onclick="refreshPage()">Tìm lại</button>
     
     </div>
 
@@ -505,10 +504,6 @@ function search(){
 
     html+=`</tbody></table></div>`;
     resultArea.innerHTML=html;
-}
-
-function refreshPage(){
-    location.reload();
 }
 
 // Allow Enter key to search
