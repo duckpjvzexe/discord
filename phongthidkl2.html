@@ -189,6 +189,13 @@ tr:hover{
         width:100%;
     }
 }
+.reset-btn{
+    background:linear-gradient(135deg,#ef4444,#f97316);
+}
+
+.reset-btn:hover{
+    box-shadow:0 15px 30px rgba(239,68,68,0.5);
+}
 </style>
 </head>
 
@@ -203,6 +210,7 @@ tr:hover{
             <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8">
         </div>
         <button onclick="search()">Tìm kiếm</button>
+        <button class="reset-btn" onclick="refreshPage()">Tìm lại</button>
     </div>
 
     <div id="resultArea"></div>
@@ -325,6 +333,9 @@ function search(){
     resultArea.innerHTML=html;
 }
 
+function refreshPage(){
+    location.reload();
+}
 </script>
 
 </body>
