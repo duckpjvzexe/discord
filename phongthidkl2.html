@@ -21,12 +21,12 @@ body{
     min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:flex-start; /* sửa */
-    padding:20px 15px;      /* thêm */
+    align-items:flex-start;
+    padding:20px 15px;
     background: radial-gradient(circle at 20% 30%, #667eea, transparent 40%),
                 radial-gradient(circle at 80% 70%, #764ba2, transparent 40%),
                 #0f172a;
-    overflow-y:auto;        /* sửa */
+    overflow-y:auto;
 }
 
 .container{
@@ -54,7 +54,7 @@ h1{
     justify-content:center;
     gap:15px;
     margin-bottom:30px;
-    flex-wrap:wrap; /* thêm */
+    flex-wrap:wrap;
 }
 
 .input-wrapper{
@@ -86,7 +86,7 @@ input{
 input:focus{
     background:rgba(255,255,255,0.2);
     box-shadow:0 0 15px #8b5cf6;
-    transform:none; /* bỏ scale gây vỡ layout */
+    transform:none;
 }
 
 button{
@@ -116,13 +116,12 @@ button:hover{
     box-shadow:0 25px 60px rgba(0,0,0,0.4);
 }
 
-/* Table responsive */
 table{
     width:100%;
     border-collapse:collapse;
     border-radius:15px;
     overflow:hidden;
-    min-width:500px; /* giữ layout */
+    min-width:500px;
 }
 
 .table-wrapper{
@@ -154,7 +153,6 @@ tr:nth-child(even){
     color:#facc15;
 }
 
-/* Mobile */
 @media(max-width:600px){
 
     body{
