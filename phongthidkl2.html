@@ -86,7 +86,6 @@ input{
 input:focus{
     background:rgba(255,255,255,0.2);
     box-shadow:0 0 15px #8b5cf6;
-    transform:none;
 }
 
 button{
@@ -99,11 +98,14 @@ button{
     color:white;
     font-size:15px;
     transition:0.3s;
-    white-space:nowrap;
 }
 
 button:hover{
     transform:translateY(-2px);
+}
+
+.reset-btn{
+    background:linear-gradient(135deg,#ef4444,#f97316);
 }
 
 .student-card{
@@ -112,34 +114,29 @@ button:hover{
     color:#1e293b;
     border-radius:25px;
     padding:25px;
-    animation:fadeUp 0.6s ease;
+    animation:fadeUp 0.5s ease;
     box-shadow:0 25px 60px rgba(0,0,0,0.4);
+}
+
+.table-wrapper{
+    overflow-x:auto;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    border-radius:15px;
-    overflow:hidden;
     min-width:500px;
-}
-
-.table-wrapper{
-    overflow-x:auto;
-    width:100%;
 }
 
 th{
     background:linear-gradient(135deg,#8b5cf6,#6366f1);
     color:white;
     padding:12px;
-    font-size:14px;
 }
 
 td{
     padding:12px;
     text-align:center;
-    font-weight:500;
 }
 
 tr:nth-child(even){
@@ -153,33 +150,34 @@ tr:nth-child(even){
     color:#facc15;
 }
 
+.loading{
+    text-align:center;
+    margin-top:15px;
+    font-weight:600;
+    color:#93c5fd;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.4;}
+}
+
 @media(max-width:600px){
-
-    body{
-        padding:15px 10px;
-    }
-
-    .container{
-        padding:25px 20px;
-        border-radius:20px;
-    }
-
-    h1{
-        font-size:22px;
-    }
-
-    .search-box{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    button{
-        width:100%;
-    }
-
-    .student-card{
-        padding:20px;
-    }
+    .container{padding:25px 20px;}
+    h1{font-size:22px;}
+    .search-box{flex-direction:column;}
+    button{width:100%;}
 }
 </style>
 </head>
@@ -195,9 +193,10 @@ tr:nth-child(even){
             <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8">
         </div>
         <button onclick="search()">Tìm kiếm</button>
-        <button class="reset-btn" onclick="refreshPage()">Tìm lại</button>
+        <button class="reset-btn" onclick="resetSearch()">Tìm lại</button>
     </div>
 
+    <div id="loading" class="loading">⏳ Đang tải dữ liệu...</div>
     <div id="resultArea"></div>
     <div id="message" class="message"></div>
 </div>
@@ -205,65 +204,80 @@ tr:nth-child(even){
 <script>
 
 let students = [];
+let isLoaded = false;
 
-pdfjsLib.getDocument("danhsach.pdf").promise.then(pdf => {
+pdfjsLib.getDocument("danhsach.pdf").promise.then(async pdf => {
 
     let currentSubject="", currentRoom="", currentSession="", currentDate="";
-    let pagePromises=[];
 
     for(let i=1;i<=pdf.numPages;i++){
-        pagePromises.push(
-            pdf.getPage(i).then(page =>
-                page.getTextContent().then(text=>{
 
-                    let content=text.items.map(s=>s.str).join(" ");
-                    let lines=content.split(/(?=Môn:|Phòng|\d{8})/);
+        const page = await pdf.getPage(i);
+        const text = await page.getTextContent();
 
-                    lines.forEach(line=>{
+        let rows = {};
 
-                        if(line.includes("Môn:")){
-                            currentSubject=line.match(/Môn:\s*(.*?)(Phòng|$)/)?.[1]?.trim()||"";
-                        }
+        text.items.forEach(item=>{
+            let y = Math.round(item.transform[5]);
+            if(!rows[y]) rows[y]=[];
+            rows[y].push(item.str);
+        });
 
-                        if(line.includes("Phòng")){
-                            let roomMatch=line.match(/Phòng\s*(\d+)/);
-                            if(roomMatch) currentRoom=roomMatch[1];
+        Object.values(rows).forEach(lineArr=>{
 
-                            let dateMatch=line.match(/ngày\s*(\d+\/\d+\/\d+)/);
-                            if(dateMatch) currentDate=dateMatch[1];
+            let line=lineArr.join(" ").trim();
 
-                            if(line.toLowerCase().includes("chiều")) currentSession="Chiều";
-                            if(line.toLowerCase().includes("sáng")) currentSession="Sáng";
-                        }
+            if(line.includes("Môn:")){
+                currentSubject=line.match(/Môn:\s*(.*?)(Phòng|$)/)?.[1]?.trim()||"";
+            }
 
-                        if(/^\d{8}/.test(line.trim())){
-                            let parts=line.trim().split(/\s+/);
-                            let sbd=parts[0];
-                            let lopIndex=parts.findIndex(p=>/^[0-9]{2}A[0-9]+$/.test(p));
+            if(line.includes("Phòng")){
+                let roomMatch=line.match(/Phòng\s*(\d+)/);
+                if(roomMatch) currentRoom=roomMatch[1];
 
-                            if(lopIndex!==-1){
-                                let lop=parts[lopIndex];
-                                let name=parts.slice(1,lopIndex).join(" ");
+                let dateMatch=line.match(/ngày\s*(\d+\/\d+\/\d+)/);
+                if(dateMatch) currentDate=dateMatch[1];
 
-                                students.push({
-                                    sbd,name,lop,
-                                    mon:currentSubject,
-                                    phong:currentRoom,
-                                    ca:currentSession,
-                                    ngay:currentDate
-                                });
-                            }
-                        }
+                if(line.toLowerCase().includes("chiều")) currentSession="Chiều";
+                if(line.toLowerCase().includes("sáng")) currentSession="Sáng";
+            }
+
+            if(/^\d{8}/.test(line)){
+                let parts=line.split(/\s+/);
+                let sbd=parts[0];
+                let lopIndex=parts.findIndex(p=>/^[0-9]{2}A[0-9]+$/.test(p));
+
+                if(lopIndex!==-1){
+                    let lop=parts[lopIndex];
+                    let rawName=parts.slice(1,lopIndex).join(" ");
+
+                    let name=rawName
+                        .split(" ")
+                        .filter((w,i,a)=>w!==a[i-1])
+                        .join(" ");
+
+                    students.push({
+                        sbd,name,lop,
+                        mon:currentSubject,
+                        phong:currentRoom,
+                        ca:currentSession,
+                        ngay:currentDate
                     });
-                })
-            )
-        );
+                }
+            }
+        });
     }
 
-    Promise.all(pagePromises);
+    isLoaded = true;
+    document.getElementById("loading").style.display="none";
 });
 
 function search(){
+
+    if(!isLoaded){
+        alert("Dữ liệu chưa tải xong, vui lòng đợi...");
+        return;
+    }
 
     const keyword=document.getElementById("searchInput").value.trim();
     const resultArea=document.getElementById("resultArea");
@@ -290,28 +304,27 @@ function search(){
     <div class="student-card">
         <h2>${student.name}</h2>
         <p><strong>Lớp:</strong> ${student.lop} | <strong>SBD:</strong> ${student.sbd}</p>
-    
         <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Môn</th>
-                        <th>Phòng</th>
-                        <th>Ca</th>
-                        <th>Ngày</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <table>
+        <thead>
+            <tr>
+                <th>Môn</th>
+                <th>Phòng</th>
+                <th>Ca</th>
+                <th>Ngày</th>
+            </tr>
+        </thead>
+        <tbody>
     `;
 
     results.forEach(s=>{
         html+=`
-            <tr>
-                <td>${s.mon}</td>
-                <td>${s.phong}</td>
-                <td>${s.ca}</td>
-                <td>${s.ngay}</td>
-            </tr>
+        <tr>
+            <td>${s.mon}</td>
+            <td>${s.phong}</td>
+            <td>${s.ca}</td>
+            <td>${s.ngay}</td>
+        </tr>
         `;
     });
 
@@ -319,9 +332,16 @@ function search(){
     resultArea.innerHTML=html;
 }
 
-function refreshPage(){
-    location.reload();
+function resetSearch(){
+    document.getElementById("searchInput").value="";
+    document.getElementById("resultArea").innerHTML="";
+    document.getElementById("message").innerHTML="";
 }
+
+document.getElementById("searchInput")
+.addEventListener("keypress",function(e){
+    if(e.key==="Enter") search();
+});
 </script>
 
 </body>
