@@ -25,7 +25,8 @@ body{
     background: radial-gradient(circle at 20% 30%, #667eea, transparent 40%),
                 radial-gradient(circle at 80% 70%, #764ba2, transparent 40%),
                 #0f172a;
-    overflow:hidden;
+    overflow-x: hidden;
+    padding: 20px;
 }
 
 .container{
@@ -54,10 +55,13 @@ h1{
     justify-content:center;
     gap:15px;
     margin-bottom:35px;
+    flex-wrap: wrap;
 }
 
 .input-wrapper{
     position:relative;
+    flex: 1;
+    min-width: 200px;
 }
 
 .input-wrapper i{
@@ -70,7 +74,7 @@ h1{
 
 input{
     padding:14px 14px 14px 40px;
-    width:260px;
+    width:100%;
     border-radius:14px;
     border:none;
     outline:none;
@@ -87,7 +91,6 @@ input::placeholder{
 input:focus{
     background:rgba(255,255,255,0.2);
     box-shadow:0 0 20px #8b5cf6;
-    transform:scale(1.05);
 }
 
 button{
@@ -102,11 +105,16 @@ button{
     transition:0.3s;
     position:relative;
     overflow:hidden;
+    white-space: nowrap;
 }
 
 button:hover{
     transform:translateY(-3px);
     box-shadow:0 15px 30px rgba(139,92,246,0.5);
+}
+
+button:active{
+    transform:translateY(-1px);
 }
 
 .student-card{
@@ -123,12 +131,14 @@ button:hover{
     color:#7c3aed;
     margin-bottom:8px;
     font-weight:700;
+    word-break: break-word;
 }
 
 .student-card p{
     margin-bottom:20px;
     font-weight:500;
     color:#475569;
+    font-size: 14px;
 }
 
 table{
@@ -141,14 +151,16 @@ table{
 th{
     background:linear-gradient(135deg,#8b5cf6,#6366f1);
     color:white;
-    padding:14px;
-    font-size:14px;
+    padding:12px 8px;
+    font-size:13px;
+    font-weight: 600;
 }
 
 td{
-    padding:14px;
+    padding:12px 8px;
     text-align:center;
     font-weight:500;
+    font-size: 13px;
 }
 
 tr:nth-child(even){
@@ -165,6 +177,7 @@ tr:hover{
     margin-top:15px;
     font-weight:600;
     color:#facc15;
+    font-size: 14px;
 }
 
 @keyframes fadeUp{
@@ -177,24 +190,139 @@ tr:hover{
     to{opacity:1;}
 }
 
-@media(max-width:600px){
-    .container{
-        padding:30px;
-    }
-    .search-box{
-        flex-direction:column;
-        align-items:center;
-    }
-    input{
-        width:100%;
-    }
-}
 .reset-btn{
     background:linear-gradient(135deg,#ef4444,#f97316);
 }
 
 .reset-btn:hover{
     box-shadow:0 15px 30px rgba(239,68,68,0.5);
+}
+
+/* Mobile Optimization */
+@media(max-width:768px){
+    body{
+        padding: 15px;
+        align-items: flex-start;
+    }
+    
+    .container{
+        padding:25px;
+        margin-top: 20px;
+        border-radius: 20px;
+    }
+    
+    h1{
+        font-size:24px;
+        margin-bottom:25px;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-box{
+        flex-direction:column;
+        gap:12px;
+        margin-bottom:25px;
+    }
+    
+    .input-wrapper{
+        min-width: unset;
+        width: 100%;
+    }
+    
+    input{
+        width:100%;
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 16px 14px 16px 40px;
+    }
+    
+    button{
+        width: 100%;
+        padding: 16px;
+        font-size: 14px;
+    }
+    
+    .student-card{
+        padding: 20px;
+        border-radius: 20px;
+        margin-top: 15px;
+    }
+    
+    .student-card h2{
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .student-card p{
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+    
+    table{
+        font-size: 12px;
+    }
+    
+    th, td{
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+    
+    .message{
+        font-size: 13px;
+    }
+}
+
+@media(max-width:480px){
+    body{
+        padding: 10px;
+    }
+    
+    .container{
+        padding: 18px;
+        border-radius: 16px;
+    }
+    
+    h1{
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .search-box{
+        gap: 10px;
+    }
+    
+    input, button{
+        font-size: 14px;
+        padding: 14px 12px;
+    }
+    
+    input{
+        padding-left: 36px;
+    }
+    
+    .input-wrapper i{
+        left: 12px;
+        font-size: 16px;
+    }
+    
+    .student-card{
+        padding: 16px;
+    }
+    
+    .student-card h2{
+        font-size: 16px;
+    }
+    
+    .student-card p{
+        font-size: 12px;
+        line-height: 1.4;
+    }
+    
+    table{
+        font-size: 11px;
+    }
+    
+    th, td{
+        padding: 8px 4px;
+    }
 }
 </style>
 </head>
@@ -207,7 +335,7 @@ tr:hover{
     <div class="search-box">
         <div class="input-wrapper">
             <i>🔎</i>
-            <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8">
+            <input type="text" id="searchInput" placeholder="Nhập số báo danh..." maxlength="8" inputmode="numeric">
         </div>
         <button onclick="search()">Tìm kiếm</button>
         <button class="reset-btn" onclick="refreshPage()">Tìm lại</button>
@@ -346,6 +474,12 @@ function search(){
 function refreshPage(){
     location.reload();
 }
+
+// Allow Enter key to search
+document.getElementById("searchInput").addEventListener("keypress", function(e){
+    if(e.key === "Enter") search();
+});
+
 </script>
 
 </body>
