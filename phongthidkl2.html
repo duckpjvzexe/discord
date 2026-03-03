@@ -657,7 +657,6 @@ tr:hover{
 
 <div id="ytPlayer"></div>
 <script>
-// Load YouTube API thủ công
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -746,7 +745,6 @@ function search(){
 
     let results=[];
 
-    // Nếu nhập SBD → ưu tiên tìm theo SBD
     if(sbd !== ""){
 
         if(!/^\d{8}$/.test(sbd)){
@@ -757,7 +755,6 @@ function search(){
         results = students.filter(s => s.sbd === sbd);
     }
 
-    // Nếu không nhập SBD → bắt buộc nhập TÊN + LỚP
     else{
 
         if(name === "" || lop === ""){
@@ -814,13 +811,11 @@ function toggleDonate(){
     const box = document.getElementById("donateBox");
     box.style.display = box.style.display === "block" ? "none" : "block";
 }
-    
-// Allow Enter key to search
+
 document.addEventListener("keypress", function(e){
     if(e.key === "Enter") search();
 });
 
-// ===== DANH SÁCH BÀI =====
 const songs = [
     { id: "FDCxanzV9IU", title: "China Pipa" },
     { id: "hjAVTnLAJSU", title: "Đảo Nghịch" },
@@ -830,11 +825,12 @@ const songs = [
     { id: "RWQ2zSQamAQ", title: "Hoa Sữa" },
     { id: "2xwp4TE9aoc", title: "Cứ Thế Mong Chờ" },
     { id: "vkpcyY7Xe64", title: "Mưa Đợi Chờ" },
-    { id: "D2itq5EXXsE", title: "Đắm Chìm" }
+    { id: "D2itq5EXXsE", title: "Đắm Chìm" },
+    { id: "rRKyd0o5H6M", title: "Làm Người Yêu Em Nhé Baby" }
 ];
 
 let player;
-let currentIndex = Math.floor(Math.random() * songs.length);
+let currentIndex = 0;
 let started = false;
 let isPlaying = false;
 let switching = false;
@@ -861,7 +857,6 @@ function onYouTubeIframeAPIReady() {
         songs[currentIndex].title;
 }
 
-// Click lần đầu → đợi 3s rồi phát
 document.addEventListener("click", function () {
     if (!started && player) {
         started = true;
@@ -873,7 +868,6 @@ document.addEventListener("click", function () {
     }
 });
 
-// Play / Pause
 function togglePlay() {
     if (!player || switching) return;
 
@@ -893,7 +887,6 @@ let nextTimeout = null;
 function nextSong() {
     if (!player) return;
 
-    // Nếu đang chờ chuyển bài → hủy lần trước
     if (nextTimeout) {
         clearTimeout(nextTimeout);
         nextTimeout = null;
@@ -901,7 +894,10 @@ function nextSong() {
 
     player.stopVideo();
 
-    currentIndex = Math.floor(Math.random() * songs.length);
+    currentIndex++;
+    if (currentIndex >= songs.length) {
+        currentIndex = 0;
+    }
 
     document.getElementById("musicTitle").innerText =
         songs[currentIndex].title;
@@ -915,7 +911,6 @@ function nextSong() {
     }, 5000);
 }
 
-// Đổi icon Play / Pause
 function updateIcon(){
     const btn = document.getElementById("playBtn");
 
@@ -932,7 +927,6 @@ function updateIcon(){
     }
 }
 
-// Ẩn player
 function togglePlayer() {
     document.getElementById("musicPlayer").style.display = "none";
 }
