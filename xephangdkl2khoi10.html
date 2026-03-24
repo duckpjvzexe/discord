@@ -38,27 +38,27 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#020817;color:#e2e8f0;mi
 
 .khoi-tabs{display:flex;gap:8px;margin:0 24px 12px;flex-wrap:wrap}
 .khoi-tab{flex:1;min-width:140px;padding:12px 16px;border-radius:12px;border:1px solid;cursor:pointer;background:none;text-align:left;transition:.15s}
-.khoi-tab.a0{border-color:#4c1d95;color:#c4b5fd}
-.khoi-tab.a0.active{background:rgba(109,40,217,.15);border-color:#7c3aed}
-.khoi-tab.a1{border-color:#1e3a5f;color:#93c5fd}
-.khoi-tab.a1.active{background:rgba(37,99,235,.15);border-color:#3b82f6}
-.khoi-tab.d{border-color:#064e3b;color:#6ee7b7}
-.khoi-tab.d.active{background:rgba(16,185,129,.15);border-color:#10b981}
+.khoi-tab.a00{border-color:#4c1d95;color:#c4b5fd}
+.khoi-tab.a00.active{background:rgba(109,40,217,.15);border-color:#7c3aed}
+.khoi-tab.a01{border-color:#1e3a5f;color:#93c5fd}
+.khoi-tab.a01.active{background:rgba(37,99,235,.15);border-color:#3b82f6}
+.khoi-tab.d01{border-color:#064e3b;color:#6ee7b7}
+.khoi-tab.d01.active{background:rgba(16,185,129,.15);border-color:#10b981}
 .khoi-tab:not(.active){color:#64748b;border-color:#1e293b}
 .khoi-tab-name{font-size:14px;font-weight:700;display:block}
 .khoi-tab-sub{font-size:11px;opacity:.7;margin-top:2px;display:block}
 
 .info-banner{margin:0 24px 12px;padding:14px 18px;border-radius:12px;border:1px solid;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
-.info-banner.a0{background:rgba(109,40,217,.08);border-color:rgba(124,58,237,.3)}
-.info-banner.a1{background:rgba(37,99,235,.08);border-color:rgba(59,130,246,.3)}
-.info-banner.d{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}
+.info-banner.a00{background:rgba(109,40,217,.08);border-color:rgba(124,58,237,.3)}
+.info-banner.a01{background:rgba(37,99,235,.08);border-color:rgba(59,130,246,.3)}
+.info-banner.d01{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}
 .info-item label{display:block;font-size:11px;color:#64748b;margin-bottom:3px}
 .info-item .val{font-size:15px;font-weight:700}
 .class-pills{display:flex;flex-wrap:wrap;gap:4px}
 .class-pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
-.class-pill.a0{background:rgba(109,40,217,.4);color:#c4b5fd}
-.class-pill.a1{background:rgba(37,99,235,.4);color:#93c5fd}
-.class-pill.d{background:rgba(16,185,129,.4);color:#6ee7b7}
+.class-pill.a00{background:rgba(109,40,217,.4);color:#c4b5fd}
+.class-pill.a01{background:rgba(37,99,235,.4);color:#93c5fd}
+.class-pill.d01{background:rgba(16,185,129,.4);color:#6ee7b7}
 
 .controls{display:flex;flex-wrap:wrap;gap:8px;margin:0 24px 12px}
 select,input[type=text]{background:#0f172a;border:1px solid rgba(255,255,255,.1);color:#e2e8f0;border-radius:8px;padding:7px 12px;font-size:13px;outline:none}
@@ -101,9 +101,9 @@ td.name.top{color:#fff}
 
 .lop-tag{font-size:11px;padding:2px 8px;border-radius:12px;background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)}
 .khoi-tag{font-size:11px;padding:2px 7px;border-radius:12px;font-weight:700}
-.khoi-tag.A0{background:rgba(109,40,217,.3);color:#c4b5fd}
-.khoi-tag.A1{background:rgba(37,99,235,.3);color:#93c5fd}
-.khoi-tag.D{background:rgba(16,185,129,.3);color:#6ee7b7}
+.khoi-tag.A00{background:rgba(109,40,217,.3);color:#c4b5fd}
+.khoi-tag.A01{background:rgba(37,99,235,.3);color:#93c5fd}
+.khoi-tag.D01{background:rgba(16,185,129,.3);color:#6ee7b7}
 
 .no-data{text-align:center;padding:40px;color:#475569}
 .footer-note{text-align:right;font-size:12px;color:#334155;margin-top:6px;padding:0 24px 8px}
@@ -160,17 +160,17 @@ td.name.top{color:#fff}
 
   <div id="tab-khoi">
     <div class="khoi-tabs">
-      <button class="khoi-tab a0 active" onclick="switchKhoi('A0',this)">
-        <span class="khoi-tab-name">Khối A0</span>
-        <span class="khoi-tab-sub" id="khoi-sub-A0">Toán + Lý + Hóa</span>
+      <button class="khoi-tab a00 active" onclick="switchKhoi('A00',this)">
+        <span class="khoi-tab-name">Khối A00</span>
+        <span class="khoi-tab-sub" id="khoi-sub-A00">Toán + Lý + Hóa</span>
       </button>
-      <button class="khoi-tab a1" onclick="switchKhoi('A1',this)">
-        <span class="khoi-tab-name">Khối A1</span>
-        <span class="khoi-tab-sub" id="khoi-sub-A1">Toán + Lý + Anh</span>
+      <button class="khoi-tab a01" onclick="switchKhoi('A01',this)">
+        <span class="khoi-tab-name">Khối A01</span>
+        <span class="khoi-tab-sub" id="khoi-sub-A01">Toán + Lý + Anh</span>
       </button>
-      <button class="khoi-tab d" onclick="switchKhoi('D',this)">
-        <span class="khoi-tab-name">Khối D</span>
-        <span class="khoi-tab-sub" id="khoi-sub-D">Toán + Văn + Anh</span>
+      <button class="khoi-tab d01" onclick="switchKhoi('D01',this)">
+        <span class="khoi-tab-name">Khối D01</span>
+        <span class="khoi-tab-sub" id="khoi-sub-D01">Toán + Văn + Anh</span>
       </button>
     </div>
     <div id="khoi-banner"></div>
@@ -185,9 +185,9 @@ td.name.top{color:#fff}
       <select id="sel-class" onchange="renderAll()"><option value="">🏫 Tất cả lớp</option></select>
       <select id="sel-khoi-filter" onchange="renderAll()">
         <option value="">🎯 Tất cả khối</option>
-        <option value="A0">Khối A0</option>
-        <option value="A1">Khối A1</option>
-        <option value="D">Khối D</option>
+        <option value="A00">Khối A00</option>
+        <option value="A01">Khối A01</option>
+        <option value="D01">Khối D01</option>
       </select>
       <input type="text" id="search-all" placeholder="🔍 Tìm tên..." oninput="renderAll()" style="min-width:180px">
       <select id="sort-all" onchange="renderAll()">
@@ -213,24 +213,18 @@ td.name.top{color:#fff}
 </div>
 
 <script>
-// ============================
-// FILE URLs (tự động fetch từ server)
-// ============================
 const FILE_URLS = {
-  toan: 'Toan.xlsx',
-  ly:   'Ly.xlsx',
-  hoa:  'Hoa.xlsx',
-  anh:  'Anh.xlsx',
-  van:  'Van.xls',
+  toan: '/api/data/Toan.xlsx',
+  ly:   '/api/data/Ly.xlsx',
+  hoa:  '/api/data/Hoa.xlsx',
+  anh:  '/api/data/Anh.xlsx',
+  van:  '/api/data/Van.xls',
 };
 
-// ============================
-// CONFIG
-// ============================
 const KHOI_CONFIG = {
-  A0: { label:'Khối A0', subjects:['toan','ly','hoa'], labels:['Toán','Lý','Hóa'], cls:'a0', color:'#a78bfa' },
-  A1: { label:'Khối A1', subjects:['toan','ly','anh'], labels:['Toán','Lý','Anh'], cls:'a1', color:'#93c5fd' },
-  D:  { label:'Khối D',  subjects:['toan','van','anh'], labels:['Toán','Văn','Anh'], cls:'d',  color:'#6ee7b7' },
+  A00: { label:'Khối A00', subjects:['toan','ly','hoa'], labels:['Toán','Lý','Hóa'], cls:'a00', color:'#a78bfa' },
+  A01: { label:'Khối A01', subjects:['toan','ly','anh'], labels:['Toán','Lý','Anh'], cls:'a01', color:'#93c5fd' },
+  D01: { label:'Khối D01', subjects:['toan','van','anh'], labels:['Toán','Văn','Anh'], cls:'d01', color:'#6ee7b7' },
 };
 
 const ALL_SUBS = [
@@ -242,22 +236,16 @@ function getKhoi(lop){
   const m = lop.match(/\d+[Aa](\d+)/);
   if(!m) return null;
   const n = parseInt(m[1]);
-  if(n<=2) return 'A0';
-  if(n<=8) return 'A1';
-  return 'D';
+  if(n<=2) return 'A00';
+  if(n<=8) return 'A01';
+  return 'D01';
 }
 
-// ============================
-// STATE
-// ============================
 let students = [];
 let classStats = [];
-let currentKhoi = 'A0';
+let currentKhoi = 'A00';
 let currentTab = 'khoi';
 
-// ============================
-// TỰ ĐỘNG TẢI KHI MỞ TRANG
-// ============================
 window.addEventListener('DOMContentLoaded', autoLoad);
 
 async function autoLoad() {
@@ -348,9 +336,6 @@ function showError(msg){
   el.style.display='block';
 }
 
-// ============================
-// XỬ LÝ DỮ LIỆU
-// ============================
 function buildData(){
   const raw = Object.values(window._rawMap||{});
   if(!raw.length){showError('Không có dữ liệu.');return;}
@@ -428,7 +413,7 @@ function buildData(){
     if(i>0&&classStats[i].avg!==classStats[i-1].avg) csr=i+1;
     classStats[i].rank=csr;
   }
-  for(const k of ['A0','A1','D']){
+  for(const k of ['A00','A01','D01']){
     const kc=[...classStats.filter(c=>c.khoi===k)].sort((a,b)=>b.tongKhoiAvg-a.tongKhoiAvg);
     let kr2=1;
     for(let i=0;i<kc.length;i++){
@@ -458,16 +443,13 @@ function buildData(){
 
   document.getElementById('loading-area').style.display='none';
   document.getElementById('main').style.display='block';
-  currentKhoi='A0';
-  switchKhoiTab('A0');
+  currentKhoi='A00';
+  switchKhoiTab('A00');
   renderKhoi();
   renderAll();
   renderClass();
 }
 
-// ============================
-// CHUYỂN TAB
-// ============================
 function switchTab(tab, btn){
   currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -491,12 +473,9 @@ function switchKhoiTab(k){
   });
 }
 
-// ============================
-// RENDER: KHỐI TAB
-// ============================
 function renderKhoi(){
   const cfg=KHOI_CONFIG[currentKhoi];
-  const c=currentKhoi==='A0'?'a0':currentKhoi==='A1'?'a1':'d';
+  const c=currentKhoi==='A00'?'a00':currentKhoi==='A01'?'a01':'d01';
   const search=document.getElementById('search-khoi').value.toLowerCase().normalize('NFC');
 
   const kClasses=classStats.filter(cs=>cs.khoi===currentKhoi).sort((a,b)=>b.tongKhoiAvg-a.tongKhoiAvg);
@@ -535,9 +514,6 @@ function renderKhoi(){
   document.getElementById('tbl-khoi').innerHTML=html;
 }
 
-// ============================
-// RENDER: TẤT CẢ HỌC SINH
-// ============================
 function renderAll(){
   const selClass=document.getElementById('sel-class').value;
   const selKhoi=document.getElementById('sel-khoi-filter').value;
@@ -603,9 +579,6 @@ function renderAll(){
   document.getElementById('all-count').textContent='Hiển thị '+arr.length+' / '+students.length+' học sinh';
 }
 
-// ============================
-// RENDER: XẾP HẠNG LỚP
-// ============================
 function renderClass(){
   const top3=classStats.slice(0,3);
   document.getElementById('top3-cards').innerHTML=top3.map(cs=>{
@@ -657,9 +630,6 @@ function goToClass(lop){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ============================
-// HELPER FUNCTIONS
-// ============================
 function rankBadge(r){
   if(r===1) return '<span class="rank r1">🥇</span>';
   if(r===2) return '<span class="rank r2">🥈</span>';
