@@ -7,146 +7,301 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
-h1 { text-align:center; }
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #0f172a; color: white; padding: 20px; margin: 0; }
+h1 { text-align: center; margin-bottom: 6px; }
+.subtitle { text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 14px; }
 
-.controls { text-align:center; margin-bottom:20px; }
+.controls {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
 
 .controls label {
     display: inline-block;
     background: #7c3aed;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 22px;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 15px;
     margin-right: 10px;
+    transition: background 0.2s;
 }
+.controls label:hover { background: #6d28d9; }
 
 .controls button {
     background: #059669;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 22px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    transition: background 0.2s;
 }
-
 .controls button:hover { background: #047857; }
 
 #file-info {
-    margin-top: 10px;
+    margin-top: 12px;
     color: #94a3b8;
     font-size: 13px;
+    line-height: 1.6;
+}
+
+.file-tag {
+    display: inline-block;
+    background: #334155;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 12px;
+}
+.file-tag.ok { border-left: 3px solid #059669; }
+.file-tag.warn { border-left: 3px solid #f59e0b; }
+
+#error {
+    color: #f87171;
+    background: #450a0a;
+    border: 1px solid #7f1d1d;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 13px;
+    display: none;
+    text-align: left;
+}
+
+.stats {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.stat-box {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+}
+.stat-box .num { font-size: 28px; font-weight: bold; color: #a78bfa; }
+.stat-box .lbl { font-size: 12px; color: #94a3b8; }
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.filter-row select, .filter-row input {
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: white;
+    font-size: 14px;
 }
 
 table {
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-    color:black;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    color: black;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
 }
+thead { position: sticky; top: 0; z-index: 10; }
+th { background: #7c3aed; color: white; padding: 11px 8px; }
+td { padding: 8px; text-align: center; }
+tr:nth-child(even):not(.top1):not(.top2):not(.top3) { background: #f8fafc; }
 
-th { background:#7c3aed; color:white; padding:10px; }
-td { padding:8px; text-align:center; }
-tr:nth-child(even):not(.top1):not(.top2):not(.top3) { background: #f1f5f9; }
+.top1 { background: #fde68a !important; font-weight: bold; }
+.top2 { background: #e2e8f0 !important; font-weight: bold; }
+.top3 { background: #fed7aa !important; font-weight: bold; }
 
-.top1 { background: gold !important; font-weight: bold; }
-.top2 { background: silver !important; font-weight: bold; }
-.top3 { background: #cd7f32 !important; font-weight: bold; color: white; }
-
-#error { color: #f87171; margin-top: 10px; display: none; }
+.score-missing { color: #9ca3af; }
 </style>
 </head>
 
 <body>
 
 <h1>🏆 BẢNG XẾP HẠNG KHỐI 10</h1>
+<p class="subtitle">Tải lên các file Excel điểm từng môn để xem bảng xếp hạng</p>
 
 <div class="controls">
     <label for="files">📂 Chọn file Excel</label>
     <input type="file" id="files" multiple accept=".xlsx,.xls" style="display:none">
-    <button onclick="process()">📊 Xử lý dữ liệu</button>
-    <div id="file-info">Chưa chọn file nào</div>
+    <button onclick="process()">📊 Xử lý &amp; xếp hạng</button>
+    <div id="file-info">Chưa chọn file nào. Hỗ trợ file: Toán, Lý/Lí, Hóa, Anh, Văn</div>
     <div id="error"></div>
+</div>
+
+<div id="stats" style="display:none" class="stats">
+    <div class="stat-box"><div class="num" id="stat-total">0</div><div class="lbl">Học sinh</div></div>
+    <div class="stat-box"><div class="num" id="stat-class">0</div><div class="lbl">Lớp</div></div>
+    <div class="stat-box"><div class="num" id="stat-subjects">0</div><div class="lbl">Môn học</div></div>
+</div>
+
+<div id="filter-area" style="display:none" class="filter-row">
+    <select id="filter-class" onchange="renderTable()">
+        <option value="">-- Tất cả các lớp --</option>
+    </select>
+    <input type="text" id="search-name" placeholder="🔍 Tìm tên học sinh..." oninput="renderTable()" style="min-width:200px">
 </div>
 
 <div id="table"></div>
 
 <script>
+// ============================
+// CẤU TRÚC FILE THỰC TẾ:
+// Toán/Lý/Hóa/Anh (.xlsx): header ở hàng 6 (index 5)
+//   cols: STT | Họ và tên | Ngày sinh | Số BD | Mã đề | câu không tô | câu phạm qui | Điểm | Ghi chú(lớp)
+// Văn (.xls): dữ liệu ở sheet "Văn 10", header ở hàng 4 (index 3)
+//   cols: TT | SBD | Số phách | Điểm | Họ tên | tên | Lớp | Văn
+// ============================
 
-let students = {};
+let allStudents = {};
+let loadedSubjects = new Set();
 
 document.getElementById("files").addEventListener("change", function() {
-    let names = Array.from(this.files).map(f => f.name).join(", ");
-    document.getElementById("file-info").textContent = names || "Chưa chọn file nào";
+    let tags = Array.from(this.files).map(f => {
+        let sub = detectSubject(f.name);
+        let cls = sub ? "ok" : "warn";
+        let label = sub ? subjectLabel(sub) : "Không nhận được";
+        return `<span class="file-tag ${cls}">${f.name} → ${label}</span>`;
+    });
+    document.getElementById("file-info").innerHTML = tags.join(" ") || "Chưa chọn file nào";
 });
 
 function detectSubject(filename) {
-    let name = filename.toLowerCase();
-
-    // Normalize tiếng Việt có dấu
-    name = name.normalize("NFC");
-
-    if (name.includes("toán") || name.includes("toan") || name.includes("to\u00e1n")) return "toan";
-    if (name.includes("lí") || name.includes("li") || name.includes("vật lý") || name.includes("vatly") || name.includes("l\u00ed")) return "ly";
-    if (name.includes("hóa") || name.includes("hoa") || name.includes("h\u00f3a")) return "hoa";
-    if (name.includes("anh")) return "anh";
-    if (name.includes("văn") || name.includes("van") || name.includes("v\u0103n")) return "van";
-
+    let n = filename.toLowerCase().normalize("NFC");
+    if (/to[aá]n/.test(n)) return "toan";
+    if (/l[ií]|v[aậ]t.*l[ií]/.test(n)) return "ly";
+    if (/h[oó]a/.test(n)) return "hoa";
+    if (/anh/.test(n)) return "anh";
+    if (/v[aă]n/.test(n)) return "van";
     return null;
 }
 
+function subjectLabel(sub) {
+    return { toan: "Toán", ly: "Lý", hoa: "Hóa", anh: "Anh", van: "Văn" }[sub] || sub;
+}
+
+// Tìm sheet có dữ liệu học sinh (cho file .xls có nhiều sheet)
+function findDataSheet(wb) {
+    for (let name of wb.SheetNames) {
+        let sheet = wb.Sheets[name];
+        let raw = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+        for (let row of raw.slice(0, 10)) {
+            let rowStr = row.join("|").toLowerCase();
+            if (rowStr.includes("họ") && (rowStr.includes("tên") || rowStr.includes("ten"))) {
+                return { sheet, raw };
+            }
+        }
+    }
+    return null;
+}
+
+// Tìm hàng header (chứa "họ" và "tên")
+function findHeaderRow(raw) {
+    for (let i = 0; i < Math.min(raw.length, 15); i++) {
+        let rowStr = raw[i].join("|").toLowerCase();
+        if (rowStr.includes("họ") && (rowStr.includes("tên") || rowStr.includes("ten"))) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 function readFile(file, subject) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         let reader = new FileReader();
 
         reader.onload = function(e) {
             try {
-                let data = e.target.result;
+                let data = new Uint8Array(e.target.result);
                 let wb = XLSX.read(data, { type: "array" });
-                let sheet = wb.Sheets[wb.SheetNames[0]];
-                let json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-                if (json.length === 0) {
-                    showError("File " + file.name + " không có dữ liệu hoặc không đọc được.");
-                    resolve();
-                    return;
+                // Tìm sheet có dữ liệu
+                let found = findDataSheet(wb);
+                if (!found) {
+                    showError("Không tìm được dữ liệu trong file: " + file.name);
+                    resolve(); return;
                 }
 
-                // Tìm tên cột linh hoạt
-                let sampleRow = json[0];
-                let keys = Object.keys(sampleRow);
-
-                let nameKey = keys.find(k => /họ.*tên|ho.*ten|tên|ten|name/i.test(k)) || keys[0];
-                let classKey = keys.find(k => /lớp|lop|class/i.test(k));
-                let scoreKey = keys.find(k => /điểm|diem|score|point|tb|trung bình/i.test(k));
-
-                // Fallback: nếu không tìm được cột điểm, thử cột cuối
-                if (!scoreKey) {
-                    scoreKey = keys[keys.length - 1];
+                let { raw } = found;
+                let headerIdx = findHeaderRow(raw);
+                if (headerIdx === -1) {
+                    showError("Không tìm được hàng tiêu đề trong file: " + file.name);
+                    resolve(); return;
                 }
 
-                json.forEach(row => {
-                    let name = row[nameKey] ? String(row[nameKey]).trim() : "";
-                    let lop = classKey ? (row[classKey] ? String(row[classKey]).trim() : "") : "";
-                    let score = scoreKey ? parseFloat(row[scoreKey]) : NaN;
+                let headers = raw[headerIdx].map(h => String(h).trim().toLowerCase());
 
-                    if (!name) return;
-                    if (isNaN(score)) score = 0;
+                // Tìm index các cột quan trọng
+                let nameIdx = headers.findIndex(h => h.includes("họ") && (h.includes("tên") || h.includes("ten")));
+                let scoreIdx = headers.findIndex(h => h === "điểm" || h === "diem" || h === "điểm");
+                // Class: trong xlsx nằm ở cột "ghi chú", trong xls nằm ở cột "lớp"
+                let classIdx = headers.findIndex(h => h.includes("lớp") || h.includes("lop") || h.includes("ghi chú") || h.includes("ghi chu"));
 
-                    let key = name + "_" + lop;
+                // Fallback: "Điểm" có thể match với các biến thể
+                if (scoreIdx === -1) {
+                    scoreIdx = headers.findIndex(h => /đi[eê]m/.test(h) || h === "diem");
+                }
+                if (scoreIdx === -1) {
+                    // Lấy cột số cuối cùng có kiểu số
+                    for (let r = headerIdx + 1; r < Math.min(raw.length, headerIdx + 5); r++) {
+                        let row = raw[r];
+                        for (let c = row.length - 1; c >= 0; c--) {
+                            if (typeof row[c] === "number" || /^\d+[\.,]\d+$/.test(String(row[c]))) {
+                                scoreIdx = c; break;
+                            }
+                        }
+                        if (scoreIdx !== -1) break;
+                    }
+                }
 
-                    if (!students[key]) {
-                        students[key] = {
-                            name, lop,
-                            toan: null, ly: null, hoa: null, anh: null, van: null
-                        };
+                if (nameIdx === -1 || scoreIdx === -1) {
+                    showError("Không tìm được cột Họ tên hoặc Điểm trong: " + file.name);
+                    resolve(); return;
+                }
+
+                let count = 0;
+                for (let r = headerIdx + 1; r < raw.length; r++) {
+                    let row = raw[r];
+                    let name = row[nameIdx] ? String(row[nameIdx]).trim() : "";
+                    if (!name || name === "Họ và tên" || name === "Họ tên") continue;
+
+                    // Bỏ qua hàng tổng kết cuối
+                    if (/tổng|tong|cộng|cong/i.test(name)) continue;
+
+                    let score = classIdx !== -1 ? row[scoreIdx] : row[scoreIdx];
+                    score = parseFloat(String(score).replace(",", "."));
+                    if (isNaN(score)) continue;
+
+                    let lop = "";
+                    if (classIdx !== -1) {
+                        lop = row[classIdx] ? String(row[classIdx]).trim() : "";
+                        // Lọc bỏ nếu lớp không hợp lệ (ví dụ: giá trị số 1 ở cột Văn trong file Văn)
+                        if (/^\d$/.test(lop)) lop = "";
                     }
 
-                    students[key][subject] = score;
-                });
+                    let key = name.replace(/\s+/g, " ") + "|" + lop;
+                    if (!allStudents[key]) {
+                        allStudents[key] = { name: name.replace(/\s+/g, " "), lop, toan: null, ly: null, hoa: null, anh: null, van: null };
+                    }
+                    allStudents[key][subject] = score;
+                    count++;
+                }
 
+                loadedSubjects.add(subject);
+                console.log(`${file.name}: ${count} học sinh, môn ${subject}`);
                 resolve();
             } catch (err) {
                 showError("Lỗi đọc file " + file.name + ": " + err.message);
@@ -154,117 +309,128 @@ function readFile(file, subject) {
             }
         };
 
-        reader.onerror = function() {
-            showError("Không thể đọc file: " + file.name);
-            resolve();
-        };
-
+        reader.onerror = () => { showError("Không mở được file: " + file.name); resolve(); };
         reader.readAsArrayBuffer(file);
     });
 }
 
 function showError(msg) {
     let el = document.getElementById("error");
-    el.textContent = msg;
+    el.innerHTML = (el.innerHTML ? el.innerHTML + "<br>" : "") + "⚠️ " + msg;
     el.style.display = "block";
 }
 
 async function process() {
-    students = {};
+    allStudents = {};
+    loadedSubjects = new Set();
+    document.getElementById("error").innerHTML = "";
     document.getElementById("error").style.display = "none";
     document.getElementById("table").innerHTML = "";
+    document.getElementById("stats").style.display = "none";
+    document.getElementById("filter-area").style.display = "none";
 
     let fileInput = document.getElementById("files");
     let files = fileInput.files;
-
-    if (files.length === 0) {
-        showError("Vui lòng chọn ít nhất một file Excel!");
-        return;
-    }
+    if (files.length === 0) { showError("Vui lòng chọn ít nhất một file Excel!"); return; }
 
     let unrecognized = [];
-
     for (let file of files) {
-        let subject = detectSubject(file.name);
-
-        if (!subject) {
-            unrecognized.push(file.name);
-            continue;
-        }
-
-        await readFile(file, subject);
+        let sub = detectSubject(file.name);
+        if (!sub) { unrecognized.push(file.name); continue; }
+        await readFile(file, sub);
     }
-
     if (unrecognized.length > 0) {
-        showError("Không nhận được môn học từ file: " + unrecognized.join(", ") +
-            "\nTên file phải chứa: toán, lí/li, hóa, anh, văn");
+        showError("Không nhận ra môn học: " + unrecognized.join(", ") + "<br>Tên file cần chứa: toán, lý/lí, hóa, anh, hoặc văn");
     }
 
-    if (Object.keys(students).length === 0) {
-        document.getElementById("table").innerHTML = "<p style='color:#f87171;text-align:center'>Không có dữ liệu để hiển thị.</p>";
+    if (Object.keys(allStudents).length === 0) {
+        document.getElementById("table").innerHTML = "<p style='color:#f87171;text-align:center;padding:20px'>Không có dữ liệu để hiển thị.</p>";
         return;
     }
 
-    render();
+    // Cập nhật stats và filter
+    let classes = [...new Set(Object.values(allStudents).map(s => s.lop).filter(Boolean))].sort();
+    let classSelect = document.getElementById("filter-class");
+    classSelect.innerHTML = '<option value="">-- Tất cả các lớp --</option>';
+    classes.forEach(c => { let o = document.createElement("option"); o.value = c; o.textContent = c; classSelect.appendChild(o); });
+
+    document.getElementById("stat-total").textContent = Object.keys(allStudents).length;
+    document.getElementById("stat-class").textContent = classes.length;
+    document.getElementById("stat-subjects").textContent = loadedSubjects.size;
+    document.getElementById("stats").style.display = "flex";
+    document.getElementById("filter-area").style.display = "flex";
+    document.getElementById("search-name").value = "";
+
+    renderTable();
 }
 
-function scoreTd(val) {
-    if (val === null || val === undefined) return '<td style="color:#94a3b8">-</td>';
-    return '<td>' + val.toFixed(1) + '</td>';
-}
+function renderTable() {
+    let filterClass = document.getElementById("filter-class").value;
+    let searchName = document.getElementById("search-name").value.toLowerCase().normalize("NFC");
 
-function render() {
-    let arr = Object.values(students);
-
-    arr.forEach(s => {
-        let scores = [s.toan, s.ly, s.hoa, s.anh, s.van].filter(v => v !== null && v !== undefined);
-        s.avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+    let arr = Object.values(allStudents).filter(s => {
+        if (filterClass && s.lop !== filterClass) return false;
+        if (searchName && !s.name.toLowerCase().normalize("NFC").includes(searchName)) return false;
+        return true;
     });
 
+    arr.forEach(s => {
+        let scores = ["toan","ly","hoa","anh","van"].map(m => s[m]).filter(v => v !== null && v !== undefined && !isNaN(v));
+        s.avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+    });
     arr.sort((a, b) => b.avg - a.avg);
 
-    let html = `
-    <table>
+    // Xếp hạng thực (cùng điểm cùng hạng)
+    let rank = 1;
+    for (let i = 0; i < arr.length; i++) {
+        if (i > 0 && arr[i].avg !== arr[i-1].avg) rank = i + 1;
+        arr[i]._rank = rank;
+    }
+
+    let subs = [
+        { key: "toan", label: "Toán" },
+        { key: "ly", label: "Lý" },
+        { key: "hoa", label: "Hóa" },
+        { key: "anh", label: "Anh" },
+        { key: "van", label: "Văn" },
+    ];
+
+    let html = `<table>
     <thead>
     <tr>
         <th>Hạng</th>
-        <th>Tên</th>
+        <th>Họ và tên</th>
         <th>Lớp</th>
-        <th>Toán</th>
-        <th>Lý</th>
-        <th>Hóa</th>
-        <th>Anh</th>
-        <th>Văn</th>
-        <th>TB</th>
+        ${subs.map(s => `<th>${s.label}</th>`).join("")}
+        <th>Trung bình</th>
     </tr>
     </thead>
-    <tbody>
-    `;
+    <tbody>`;
 
-    arr.forEach((s, i) => {
-        let cls = i === 0 ? "top1" : i === 1 ? "top2" : i === 2 ? "top3" : "";
-        let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+    arr.forEach((s) => {
+        let r = s._rank;
+        let cls = r === 1 ? "top1" : r === 2 ? "top2" : r === 3 ? "top3" : "";
+        let medal = r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "🥉" : r;
 
-        html += `
-        <tr class="${cls}">
-            <td>${medal} ${i + 1}</td>
+        let scoreCells = subs.map(sub => {
+            let v = s[sub.key];
+            if (v === null || v === undefined || isNaN(v)) return `<td class="score-missing">-</td>`;
+            let color = v >= 8 ? "#166534" : v >= 6.5 ? "#1e40af" : v >= 5 ? "#92400e" : "#991b1b";
+            return `<td style="color:${color};font-weight:${v>=8?"bold":"normal"}">${v.toFixed(2)}</td>`;
+        }).join("");
+
+        html += `<tr class="${cls}">
+            <td style="font-weight:bold">${medal}</td>
             <td style="text-align:left;padding-left:12px">${s.name}</td>
-            <td>${s.lop}</td>
-            ${scoreTd(s.toan)}
-            ${scoreTd(s.ly)}
-            ${scoreTd(s.hoa)}
-            ${scoreTd(s.anh)}
-            ${scoreTd(s.van)}
+            <td>${s.lop || "-"}</td>
+            ${scoreCells}
             <td><strong>${s.avg.toFixed(2)}</strong></td>
-        </tr>
-        `;
+        </tr>`;
     });
 
     html += "</tbody></table>";
-
     document.getElementById("table").innerHTML = html;
 }
-
 </script>
 
 </body>
