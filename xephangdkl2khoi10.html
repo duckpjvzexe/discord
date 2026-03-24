@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Xếp hạng khối 10</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
+h1 { text-align:center; }
+
+.controls { text-align:center; margin-bottom:20px; }
+
+table {
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    color:black;
+}
+
+th { background:#7c3aed; color:white; padding:10px; }
+td { padding:8px; text-align:center; }
+
+.top1 { background: gold !important; }
+.top2 { background: silver !important; }
+.top3 { background: #cd7f32 !important; }
+
+</style>
+</head>
+
+<body>
+
+<h1>🏆 BẢNG XẾP HẠNG KHỐI 10</h1>
+
+<div class="controls">
+    <input type="file" id="files" multiple>
+    <button onclick="process()">Xử lý dữ liệu</button>
+</div>
+
+<div id="table"></div>
+
+<script>
+
+let students = {}; // key: name+class
+
+// ===== ĐỌC FILE =====
+function readFile(file, subject){
+    return new Promise(resolve => {
+        let reader = new FileReader();
+
+        reader.onload = function(e){
+            let wb = XLSX.read(e.target.result, {type:'binary'});
+            let sheet = wb.Sheets[wb.SheetNames[0]];
+            let json = XLSX.utils.sheet_to_json(sheet);
+
+            json.forEach(row => {
+                let name = row["Họ tên"];
+                let lop = row["Lớp"];
+                let key = name + "_" + lop;
+
+                if(!students[key]){
+                    students[key] = {
+                        name, lop,
+                        toan:0, ly:0, hoa:0, anh:0, van:0
+                    };
+                }
+
+                // gán môn
+                if(subject === "toan") students[key].toan = row["Điểm"];
+                if(subject === "ly")   students[key].ly   = row["Điểm"];
+                if(subject === "hoa")  students[key].hoa  = row["Điểm"];
+                if(subject === "anh")  students[key].anh  = row["Điểm"];
+                if(subject === "van")  students[key].van  = row["Điểm"];
+            });
+
+            resolve();
+        };
+
+        reader.readAsBinaryString(file);
+    });
+}
+
+// ===== XỬ LÝ =====
+async function process(){
+    students = {};
+
+    let files = document.getElementById("files").files;
+
+    for(let file of files){
+        let name = file.name.toLowerCase();
+
+        if(name.includes("toán") || name.includes("toan"))
+            await readFile(file, "toan");
+
+        else if(name.includes("lí") || name.includes("li"))
+            await readFile(file, "ly");
+
+        else if(name.includes("hóa") || name.includes("hoa"))
+            await readFile(file, "hoa");
+
+        else if(name.includes("anh"))
+            await readFile(file, "anh");
+
+        else if(name.includes("văn") || name.includes("van"))
+            await readFile(file, "van");
+    }
+
+    render();
+}
+
+// ===== HIỂN THỊ =====
+function render(){
+    let arr = Object.values(students);
+
+    arr.forEach(s => {
+        s.avg = (
+            s.toan + s.ly + s.hoa + s.anh + s.van
+        ) / 5;
+    });
+
+    arr.sort((a,b)=>b.avg - a.avg);
+
+    let html = `
+    <table>
+    <tr>
+        <th>Hạng</th>
+        <th>Tên</th>
+        <th>Lớp</th>
+        <th>Toán</th>
+        <th>Lý</th>
+        <th>Hóa</th>
+        <th>Anh</th>
+        <th>Văn</th>
+        <th>TB</th>
+    </tr>
+    `;
+
+    arr.forEach((s,i)=>{
+        let cls = i===0?"top1":i===1?"top2":i===2?"top3":"";
+
+        html += `
+        <tr class="${cls}">
+            <td>${i+1}</td>
+            <td>${s.name}</td>
+            <td>${s.lop}</td>
+            <td>${s.toan}</td>
+            <td>${s.ly}</td>
+            <td>${s.hoa}</td>
+            <td>${s.anh}</td>
+            <td>${s.van}</td>
+            <td>${s.avg.toFixed(2)}</td>
+        </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    document.getElementById("table").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
