@@ -7,20 +7,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
+body {
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
+
 h1 { text-align:center; }
 
-.controls { text-align:center; margin-bottom:20px; }
+.controls {
+    text-align:center;
+    margin-bottom:20px;
+}
 
-table {
+button{
+    padding:10px 20px;
+    font-size:16px;
+    background:#7c3aed;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+table{
     width:100%;
     border-collapse:collapse;
     background:white;
     color:black;
 }
 
-th { background:#7c3aed; color:white; padding:10px; }
-td { padding:8px; text-align:center; }
+th{
+    background:#7c3aed;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:8px;
+    text-align:center;
+}
 
 .top1 { background: gold !important; }
 .top2 { background: silver !important; }
@@ -34,7 +61,6 @@ td { padding:8px; text-align:center; }
 <h1>🏆 BẢNG XẾP HẠNG KHỐI 10</h1>
 
 <div class="controls">
-    <input type="file" id="files" multiple>
     <button onclick="process()">Xử lý dữ liệu</button>
 </div>
 
@@ -42,75 +68,73 @@ td { padding:8px; text-align:center; }
 
 <script>
 
-let students = {}; // key: name+class
+let students = {};
 
-// ===== ĐỌC FILE =====
-function readFile(file, subject){
-    return new Promise(resolve => {
-        let reader = new FileReader();
+// ===== DANH SÁCH LINK FILE =====
+// 👉 Sửa link tại đây
 
-        reader.onload = function(e){
-            let wb = XLSX.read(e.target.result, {type:'binary'});
-            let sheet = wb.Sheets[wb.SheetNames[0]];
-            let json = XLSX.utils.sheet_to_json(sheet);
+const fileLinks = [
+  {url: "Toán.xlsx", subject: "toan"},
+  {url: "Lí.xlsx",   subject: "ly"},
+  {url: "Hoá.xlsx",  subject: "hoa"},
+  {url: "Anh.xlsx",  subject: "anh"},
+  {url: "Văn.xlsx",  subject: "van"}
+];
 
-            json.forEach(row => {
-                let name = row["Họ tên"];
-                let lop = row["Lớp"];
-                let key = name + "_" + lop;
+// ===== ĐỌC FILE TỪ LINK =====
 
-                if(!students[key]){
-                    students[key] = {
-                        name, lop,
-                        toan:0, ly:0, hoa:0, anh:0, van:0
-                    };
-                }
+async function readFileFromURL(url, subject){
 
-                // gán môn
-                if(subject === "toan") students[key].toan = row["Điểm"];
-                if(subject === "ly")   students[key].ly   = row["Điểm"];
-                if(subject === "hoa")  students[key].hoa  = row["Điểm"];
-                if(subject === "anh")  students[key].anh  = row["Điểm"];
-                if(subject === "van")  students[key].van  = row["Điểm"];
-            });
+    const res = await fetch(url);
+    const data = await res.arrayBuffer();
 
-            resolve();
-        };
+    let wb = XLSX.read(data, {type: "array"});
+    let sheet = wb.Sheets[wb.SheetNames[0]];
+    let json = XLSX.utils.sheet_to_json(sheet);
 
-        reader.readAsBinaryString(file);
+    json.forEach(row => {
+
+        let name = row["Họ tên"];
+        let lop  = row["Lớp"];
+
+        if(!name || !lop) return;
+
+        let key = name + "_" + lop;
+
+        if(!students[key]){
+            students[key] = {
+                name, lop,
+                toan:0, ly:0, hoa:0, anh:0, van:0
+            };
+        }
+
+        let score = Number(row["Điểm"]) || 0;
+
+        if(subject === "toan") students[key].toan = score;
+        if(subject === "ly")   students[key].ly   = score;
+        if(subject === "hoa")  students[key].hoa  = score;
+        if(subject === "anh")  students[key].anh  = score;
+        if(subject === "van")  students[key].van  = score;
     });
 }
 
-// ===== XỬ LÝ =====
+// ===== XỬ LÝ TỔNG =====
+
 async function process(){
+
     students = {};
 
-    let files = document.getElementById("files").files;
-
-    for(let file of files){
-        let name = file.name.toLowerCase();
-
-        if(name.includes("toán") || name.includes("toan"))
-            await readFile(file, "toan");
-
-        else if(name.includes("lí") || name.includes("li"))
-            await readFile(file, "ly");
-
-        else if(name.includes("hóa") || name.includes("hoa"))
-            await readFile(file, "hoa");
-
-        else if(name.includes("anh"))
-            await readFile(file, "anh");
-
-        else if(name.includes("văn") || name.includes("van"))
-            await readFile(file, "van");
+    for(let f of fileLinks){
+        await readFileFromURL(f.url, f.subject);
     }
 
     render();
 }
 
 // ===== HIỂN THỊ =====
+
 function render(){
+
     let arr = Object.values(students);
 
     arr.forEach(s => {
@@ -137,7 +161,11 @@ function render(){
     `;
 
     arr.forEach((s,i)=>{
-        let cls = i===0?"top1":i===1?"top2":i===2?"top3":"";
+
+        let cls =
+            i===0 ? "top1" :
+            i===1 ? "top2" :
+            i===2 ? "top3" : "";
 
         html += `
         <tr class="${cls}">
