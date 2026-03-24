@@ -7,52 +7,55 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-body {
-    font-family: Arial;
-    background:#0f172a;
-    color:white;
-    padding:20px;
-}
-
+body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
 h1 { text-align:center; }
 
-.controls {
-    text-align:center;
-    margin-bottom:20px;
+.controls { text-align:center; margin-bottom:20px; }
+
+.controls label {
+    display: inline-block;
+    background: #7c3aed;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
-button{
-    padding:10px 20px;
-    font-size:16px;
-    background:#7c3aed;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+.controls button {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
-table{
+.controls button:hover { background: #047857; }
+
+#file-info {
+    margin-top: 10px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+table {
     width:100%;
     border-collapse:collapse;
     background:white;
     color:black;
 }
 
-th{
-    background:#7c3aed;
-    color:white;
-    padding:10px;
-}
+th { background:#7c3aed; color:white; padding:10px; }
+td { padding:8px; text-align:center; }
+tr:nth-child(even):not(.top1):not(.top2):not(.top3) { background: #f1f5f9; }
 
-td{
-    padding:8px;
-    text-align:center;
-}
+.top1 { background: gold !important; font-weight: bold; }
+.top2 { background: silver !important; font-weight: bold; }
+.top3 { background: #cd7f32 !important; font-weight: bold; color: white; }
 
-.top1 { background: gold !important; }
-.top2 { background: silver !important; }
-.top3 { background: #cd7f32 !important; }
-
+#error { color: #f87171; margin-top: 10px; display: none; }
 </style>
 </head>
 
@@ -61,7 +64,11 @@ td{
 <h1>🏆 BẢNG XẾP HẠNG KHỐI 10</h1>
 
 <div class="controls">
-    <button onclick="process()">Xử lý dữ liệu</button>
+    <label for="files">📂 Chọn file Excel</label>
+    <input type="file" id="files" multiple accept=".xlsx,.xls" style="display:none">
+    <button onclick="process()">📊 Xử lý dữ liệu</button>
+    <div id="file-info">Chưa chọn file nào</div>
+    <div id="error"></div>
 </div>
 
 <div id="table"></div>
@@ -70,83 +77,155 @@ td{
 
 let students = {};
 
-// ===== DANH SÁCH LINK FILE =====
-// 👉 Sửa link tại đây
+document.getElementById("files").addEventListener("change", function() {
+    let names = Array.from(this.files).map(f => f.name).join(", ");
+    document.getElementById("file-info").textContent = names || "Chưa chọn file nào";
+});
 
-const fileLinks = [
-  {url: "Toán.xlsx", subject: "toan"},
-  {url: "Lí.xlsx",   subject: "ly"},
-  {url: "Hóa.xlsx",  subject: "hoa"},
-  {url: "Anh.xlsx",  subject: "anh"},
-  {url: "Văn.xls",  subject: "van"}
-];
+function detectSubject(filename) {
+    let name = filename.toLowerCase();
 
-// ===== ĐỌC FILE TỪ LINK =====
+    // Normalize tiếng Việt có dấu
+    name = name.normalize("NFC");
 
-async function readFileFromURL(url, subject){
+    if (name.includes("toán") || name.includes("toan") || name.includes("to\u00e1n")) return "toan";
+    if (name.includes("lí") || name.includes("li") || name.includes("vật lý") || name.includes("vatly") || name.includes("l\u00ed")) return "ly";
+    if (name.includes("hóa") || name.includes("hoa") || name.includes("h\u00f3a")) return "hoa";
+    if (name.includes("anh")) return "anh";
+    if (name.includes("văn") || name.includes("van") || name.includes("v\u0103n")) return "van";
 
-    const res = await fetch(url);
-    const data = await res.arrayBuffer();
+    return null;
+}
 
-    let wb = XLSX.read(data, {type: "array"});
-    let sheet = wb.Sheets[wb.SheetNames[0]];
-    let json = XLSX.utils.sheet_to_json(sheet);
+function readFile(file, subject) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
 
-    json.forEach(row => {
+        reader.onload = function(e) {
+            try {
+                let data = e.target.result;
+                let wb = XLSX.read(data, { type: "array" });
+                let sheet = wb.Sheets[wb.SheetNames[0]];
+                let json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-        let name = row["Họ tên"];
-        let lop  = row["Lớp"];
+                if (json.length === 0) {
+                    showError("File " + file.name + " không có dữ liệu hoặc không đọc được.");
+                    resolve();
+                    return;
+                }
 
-        if(!name || !lop) return;
+                // Tìm tên cột linh hoạt
+                let sampleRow = json[0];
+                let keys = Object.keys(sampleRow);
 
-        let key = name + "_" + lop;
+                let nameKey = keys.find(k => /họ.*tên|ho.*ten|tên|ten|name/i.test(k)) || keys[0];
+                let classKey = keys.find(k => /lớp|lop|class/i.test(k));
+                let scoreKey = keys.find(k => /điểm|diem|score|point|tb|trung bình/i.test(k));
 
-        if(!students[key]){
-            students[key] = {
-                name, lop,
-                toan:0, ly:0, hoa:0, anh:0, van:0
-            };
-        }
+                // Fallback: nếu không tìm được cột điểm, thử cột cuối
+                if (!scoreKey) {
+                    scoreKey = keys[keys.length - 1];
+                }
 
-        let score = Number(row["Điểm"]) || 0;
+                json.forEach(row => {
+                    let name = row[nameKey] ? String(row[nameKey]).trim() : "";
+                    let lop = classKey ? (row[classKey] ? String(row[classKey]).trim() : "") : "";
+                    let score = scoreKey ? parseFloat(row[scoreKey]) : NaN;
 
-        if(subject === "toan") students[key].toan = score;
-        if(subject === "ly")   students[key].ly   = score;
-        if(subject === "hoa")  students[key].hoa  = score;
-        if(subject === "anh")  students[key].anh  = score;
-        if(subject === "van")  students[key].van  = score;
+                    if (!name) return;
+                    if (isNaN(score)) score = 0;
+
+                    let key = name + "_" + lop;
+
+                    if (!students[key]) {
+                        students[key] = {
+                            name, lop,
+                            toan: null, ly: null, hoa: null, anh: null, van: null
+                        };
+                    }
+
+                    students[key][subject] = score;
+                });
+
+                resolve();
+            } catch (err) {
+                showError("Lỗi đọc file " + file.name + ": " + err.message);
+                resolve();
+            }
+        };
+
+        reader.onerror = function() {
+            showError("Không thể đọc file: " + file.name);
+            resolve();
+        };
+
+        reader.readAsArrayBuffer(file);
     });
 }
 
-// ===== XỬ LÝ TỔNG =====
+function showError(msg) {
+    let el = document.getElementById("error");
+    el.textContent = msg;
+    el.style.display = "block";
+}
 
-async function process(){
-
+async function process() {
     students = {};
+    document.getElementById("error").style.display = "none";
+    document.getElementById("table").innerHTML = "";
 
-    for(let f of fileLinks){
-        await readFileFromURL(f.url, f.subject);
+    let fileInput = document.getElementById("files");
+    let files = fileInput.files;
+
+    if (files.length === 0) {
+        showError("Vui lòng chọn ít nhất một file Excel!");
+        return;
+    }
+
+    let unrecognized = [];
+
+    for (let file of files) {
+        let subject = detectSubject(file.name);
+
+        if (!subject) {
+            unrecognized.push(file.name);
+            continue;
+        }
+
+        await readFile(file, subject);
+    }
+
+    if (unrecognized.length > 0) {
+        showError("Không nhận được môn học từ file: " + unrecognized.join(", ") +
+            "\nTên file phải chứa: toán, lí/li, hóa, anh, văn");
+    }
+
+    if (Object.keys(students).length === 0) {
+        document.getElementById("table").innerHTML = "<p style='color:#f87171;text-align:center'>Không có dữ liệu để hiển thị.</p>";
+        return;
     }
 
     render();
 }
 
-// ===== HIỂN THỊ =====
+function scoreTd(val) {
+    if (val === null || val === undefined) return '<td style="color:#94a3b8">-</td>';
+    return '<td>' + val.toFixed(1) + '</td>';
+}
 
-function render(){
-
+function render() {
     let arr = Object.values(students);
 
     arr.forEach(s => {
-        s.avg = (
-            s.toan + s.ly + s.hoa + s.anh + s.van
-        ) / 5;
+        let scores = [s.toan, s.ly, s.hoa, s.anh, s.van].filter(v => v !== null && v !== undefined);
+        s.avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
     });
 
-    arr.sort((a,b)=>b.avg - a.avg);
+    arr.sort((a, b) => b.avg - a.avg);
 
     let html = `
     <table>
+    <thead>
     <tr>
         <th>Hạng</th>
         <th>Tên</th>
@@ -158,31 +237,30 @@ function render(){
         <th>Văn</th>
         <th>TB</th>
     </tr>
+    </thead>
+    <tbody>
     `;
 
-    arr.forEach((s,i)=>{
-
-        let cls =
-            i===0 ? "top1" :
-            i===1 ? "top2" :
-            i===2 ? "top3" : "";
+    arr.forEach((s, i) => {
+        let cls = i === 0 ? "top1" : i === 1 ? "top2" : i === 2 ? "top3" : "";
+        let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
 
         html += `
         <tr class="${cls}">
-            <td>${i+1}</td>
-            <td>${s.name}</td>
+            <td>${medal} ${i + 1}</td>
+            <td style="text-align:left;padding-left:12px">${s.name}</td>
             <td>${s.lop}</td>
-            <td>${s.toan}</td>
-            <td>${s.ly}</td>
-            <td>${s.hoa}</td>
-            <td>${s.anh}</td>
-            <td>${s.van}</td>
-            <td>${s.avg.toFixed(2)}</td>
+            ${scoreTd(s.toan)}
+            ${scoreTd(s.ly)}
+            ${scoreTd(s.hoa)}
+            ${scoreTd(s.anh)}
+            ${scoreTd(s.van)}
+            <td><strong>${s.avg.toFixed(2)}</strong></td>
         </tr>
         `;
     });
 
-    html += "</table>";
+    html += "</tbody></table>";
 
     document.getElementById("table").innerHTML = html;
 }
