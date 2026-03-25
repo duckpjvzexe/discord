@@ -535,7 +535,7 @@ function renderAll(){
   const isClassView=!!selClass;
   let html=`<thead><tr>
     ${isClassView?'<th>HẠNG LỚP</th>':''}
-    <th>HẠNG KHỐI</th>
+    <th>HẠNG KHỐI 10</th>
     <th style="text-align:left">HỌ VÀ TÊN</th>
     ${!isClassView?'<th>LỚP</th><th>KHỐI</th>':''}
     ${ALL_SUBS.map(s=>`<th>${s.label.toUpperCase()}</th>`).join('')}
@@ -580,7 +580,7 @@ function renderClass(){
   }).join('');
 
   let html=`<thead><tr>
-    <th>HẠNG</th><th style="text-align:left">LỚP</th><th>KHỐI</th><th>HẠNG KHỐI</th><th>SĨ SỐ</th>
+    <th>HẠNG</th><th style="text-align:left">LỚP</th><th>KHỐI</th><th>HẠNG KHỐI MÔN</th><th>SĨ SỐ</th>
     ${ALL_SUBS.map(s=>`<th>TB ${s.label.toUpperCase()}</th>`).join('')}
     <th style="color:#fbbf24">TB TỔNG 3 MÔN</th>
     <th style="color:#a78bfa">TB 5 MÔN</th>
