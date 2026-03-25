@@ -537,7 +537,7 @@ function renderAll(){
   const isClassView=!!selClass;
   let html=`<thead><tr>
     ${isClassView?'<th>HẠNG LỚP</th>':''}
-    <th>HẠNG KHỐI 10</th>
+    ${(()=>{const m={tongKhoi:'HẠNG TỔNG 3 MÔN',avg:'HẠNG TB 5 MÔN',toan:'HẠNG TOÁN',ly:'HẠNG LÝ',hoa:'HẠNG HÓA',anh:'HẠNG ANH',van:'HẠNG VĂN'};return '<th>'+( m[sortBy]||'HẠNG KHỐI 10')+'</th>';})()}
     <th style="text-align:left">HỌ VÀ TÊN</th>
     ${!isClassView?'<th>LỚP</th><th>KHỐI</th>':''}
     ${ALL_SUBS.map(s=>`<th>${s.label.toUpperCase()}</th>`).join('')}
