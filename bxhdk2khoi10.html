@@ -658,20 +658,23 @@ function renderAll(){
   const search=document.getElementById('search-all').value.toLowerCase().normalize('NFC');
   const sortBy=document.getElementById('sort-all').value;
 
-  let arr=[...students];
+  const getVal=s=>sortBy==='tongKhoi'?(s.tongKhoi??-1):sortBy==='avg'?s.avg:(s[sortBy]??-1);
+
+  // Tính hạng trên TOÀN BỘ học sinh trước (không lọc), sau đó mới lọc để hiển thị
+  const allSorted=[...students];
+  if(sortBy==='tongKhoi') allSorted.sort((a,b)=>(b.tongKhoi??-1)-(a.tongKhoi??-1));
+  else if(sortBy==='avg') allSorted.sort((a,b)=>b.avg-a.avg);
+  else allSorted.sort((a,b)=>(b[sortBy]??-1)-(a[sortBy]??-1));
+
+  for(let i=0;i<allSorted.length;i++){
+    allSorted[i]._dynRank = (i===0||getVal(allSorted[i])!==getVal(allSorted[i-1])) ? i+1 : allSorted[i-1]._dynRank;
+  }
+
+  // Sau đó lọc để hiển thị — hạng đã đúng từ bước trên
+  let arr=[...allSorted];
   if(selClass) arr=arr.filter(s=>s.lop===selClass);
   if(selKhoi) arr=arr.filter(s=>s.khoi===selKhoi);
   if(search) arr=arr.filter(s=>s.name.toLowerCase().normalize('NFC').includes(search));
-
-  if(sortBy==='tongKhoi') arr.sort((a,b)=>(b.tongKhoi??-1)-(a.tongKhoi??-1));
-  else if(sortBy==='avg') arr.sort((a,b)=>b.avg-a.avg);
-  else arr.sort((a,b)=>(b[sortBy]??-1)-(a[sortBy]??-1));
-
-  const getVal=s=>sortBy==='tongKhoi'?(s.tongKhoi??-1):sortBy==='avg'?s.avg:(s[sortBy]??-1);
-  // Standard competition ranking for dynamic view
-  for(let i=0;i<arr.length;i++){
-    arr[i]._dynRank = (i===0||getVal(arr[i])!==getVal(arr[i-1])) ? i+1 : arr[i-1]._dynRank;
-  }
 
   const panel=document.getElementById('class-info-panel');
   if(selClass){
