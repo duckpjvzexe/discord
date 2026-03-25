@@ -490,13 +490,11 @@ function buildData(){
     return {...s,avg,khoi,tongKhoi,gradeRank:0,classRank:0,khoiRank:0};
   });
 
-  // Grade rank — standard competition ranking (1224)
   const byAvg = [...withExtra].sort((a,b)=>b.avg-a.avg);
   for(let i=0;i<byAvg.length;i++){
     byAvg[i].gradeRank = (i===0||byAvg[i].avg!==byAvg[i-1].avg) ? i+1 : byAvg[i-1].gradeRank;
   }
 
-  // Class rank — standard competition ranking
   const byClass={};
   for(const s of byAvg){
     if(!byClass[s.lop]) byClass[s.lop]=[];
@@ -512,7 +510,6 @@ function buildData(){
     }
   }
 
-  // Khoi rank — standard competition ranking
   const byKhoi={};
   for(const s of withExtra){
     if(s.khoi&&s.tongKhoi!==null){
@@ -543,13 +540,11 @@ function buildData(){
     classStats.push({lop,khoi,avg:cavg,tongKhoiAvg,count:arr.length,rank:0,khoiClassRank:0,toan:subAvg('toan'),ly:subAvg('ly'),hoa:subAvg('hoa'),anh:subAvg('anh'),van:subAvg('van')});
   }
 
-  // Class overall rank — standard competition ranking
   classStats.sort((a,b)=>b.avg-a.avg);
   for(let i=0;i<classStats.length;i++){
     classStats[i].rank = (i===0||classStats[i].avg!==classStats[i-1].avg) ? i+1 : classStats[i-1].rank;
   }
 
-  // Class khoi rank — standard competition ranking
   for(const k of ['A00','A01','D01']){
     const kc=[...classStats.filter(c=>c.khoi===k)].sort((a,b)=>b.tongKhoiAvg-a.tongKhoiAvg);
     for(let i=0;i<kc.length;i++){
@@ -660,8 +655,6 @@ function renderAll(){
 
   const getVal=s=>sortBy==='tongKhoi'?(s.tongKhoi??-1):sortBy==='avg'?s.avg:(s[sortBy]??-1);
 
-  // Phạm vi tính hạng: nếu có lọc lớp hoặc khối thì hạng trong nhóm đó,
-  // nếu không thì hạng toàn khối 10. Tìm kiếm tên không ảnh hưởng phạm vi hạng.
   let rankPool=[...students];
   if(selClass) rankPool=rankPool.filter(s=>s.lop===selClass);
   if(selKhoi)  rankPool=rankPool.filter(s=>s.khoi===selKhoi);
@@ -674,7 +667,6 @@ function renderAll(){
     rankPool[i]._dynRank = (i===0||getVal(rankPool[i])!==getVal(rankPool[i-1])) ? i+1 : rankPool[i-1]._dynRank;
   }
 
-  // Hiển thị: lấy từ rankPool (đã đúng thứ tự), chỉ lọc thêm tìm kiếm tên
   let arr=[...rankPool];
   if(search) arr=arr.filter(s=>s.name.toLowerCase().normalize('NFC').includes(search));
 
