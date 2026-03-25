@@ -324,8 +324,7 @@ function buildData(){
   if(!raw.length){showError('Không có dữ liệu.');return;}
 
   const withExtra = raw.map(s=>{
-    const scores = ALL_SUBS.map(x=>s[x.key]).filter(v=>v!==null&&!isNaN(v));
-    const avg = scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+    const avg = parseFloat((ALL_SUBS.reduce((sum,x)=>sum+(s[x.key]!==null&&!isNaN(s[x.key])?s[x.key]:0),0)/5).toFixed(2));
     const khoi = getKhoi(s.lop);
     let tongKhoi = null;
     if(khoi){
