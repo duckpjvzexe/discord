@@ -329,8 +329,7 @@ function buildData(){
     let tongKhoi = null;
     if(khoi){
       const subs = KHOI_CONFIG[khoi].subjects;
-      const vals = subs.map(sub=>s[sub]).filter(v=>v!==null&&!isNaN(v));
-      if(vals.length===subs.length) tongKhoi = parseFloat(vals.reduce((a,b)=>a+b,0).toFixed(2));
+      tongKhoi = parseFloat(subs.reduce((sum,sub)=>sum+(s[sub]!==null&&!isNaN(s[sub])?s[sub]:0),0).toFixed(2));
     }
     return {...s,avg,khoi,tongKhoi,gradeRank:0,classRank:0,khoiRank:0};
   });
@@ -536,7 +535,6 @@ function renderAll(){
 
   const isClassView=!!selClass;
   let html=`<thead><tr>
-    ${isClassView?'<th>HẠNG LỚP</th>':''}
     ${(()=>{const m={tongKhoi:'HẠNG TỔNG 3 MÔN',avg:'HẠNG TB 5 MÔN',toan:'HẠNG TOÁN',ly:'HẠNG LÝ',hoa:'HẠNG HÓA',anh:'HẠNG ANH',van:'HẠNG VĂN'};return '<th>'+( m[sortBy]||'HẠNG KHỐI 10')+'</th>';})()}
     <th style="text-align:left">HỌ VÀ TÊN</th>
     ${!isClassView?'<th>LỚP</th><th>KHỐI</th>':''}
@@ -550,8 +548,7 @@ function renderAll(){
     arr.forEach((s)=>{
       const rc=s._dynRank===1?'row-1':s._dynRank===2?'row-2':s._dynRank===3?'row-3':'';
       html+=`<tr class="${rc}">
-        ${isClassView?`<td>${rankBadge(s.classRank)}</td>`:''}
-        <td>${rankBadge(s._dynRank)}</td>
+             <td>${rankBadge(s._dynRank)}</td>
         <td class="name ${s._dynRank<=3?'top':''}">${s.name}</td>
         ${!isClassView?`<td><span class="lop-tag">${s.lop}</span></td><td>${s.khoi?`<span class="khoi-tag ${s.khoi}">${s.khoi}</span>`:'—'}</td>`:''}
         ${ALL_SUBS.map(x=>`<td class="${scoreClass(s[x.key])}">${s[x.key]!==null?s[x.key].toFixed(2):'—'}</td>`).join('')}
