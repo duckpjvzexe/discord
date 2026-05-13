@@ -140,11 +140,14 @@ body::after {
 
 .guide-list li {
     display: flex; align-items: flex-start; gap: 8px;
-    font-size: 13px; color: var(--text-secondary); line-height: 1.55;
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
     background: rgba(255,255,255,0.04);
     padding: 10px 12px; border-radius: var(--radius-sm);
     border: 1px solid rgba(255,255,255,0.06);
+    overflow-wrap: break-word; word-break: break-word;
 }
+
+.guide-list li strong { color: var(--text-primary); white-space: nowrap; }
 
 .guide-list li .dot {
     width: 6px; height: 6px; border-radius: 50%;
@@ -552,9 +555,9 @@ body::after {
             <span>📌</span> HƯỚNG DẪN TRA CỨU
         </div>
         <ul class="guide-list">
-            <li><span class="dot"></span>Nhập <strong>Số báo danh (8 số)</strong> để tìm nhanh và chính xác nhất.</li>
-            <li><span class="dot"></span>Nếu không nhớ SBD, nhập <strong>Họ và tên + Lớp</strong> để tra cứu.</li>
-            <li><span class="dot"></span>Tên cần nhập đủ dấu tiếng Việt. Lớp nhập dạng <strong>10A1</strong>, <strong>11A3</strong>…</li>
+            <li><span class="dot"></span>Nhập <strong>Số báo danh</strong> (8 chữ số) để tìm nhanh và chính xác nhất.</li>
+            <li><span class="dot"></span>Không nhớ SBD? Nhập <strong>Họ và tên + Lớp</strong> để tra cứu.</li>
+            <li><span class="dot"></span>Nhập đủ dấu tiếng Việt. Lớp ghi dạng <strong>10A1, 11A3</strong>…</li>
             <li><span class="dot"></span>Một học sinh thi nhiều môn — kết quả hiển thị toàn bộ các môn.</li>
         </ul>
     </div>
